@@ -3,6 +3,8 @@ import { Accordion } from "@mui/material";
 
 export const StyledAccordion = styled(Accordion)`
   background-color: #fff;
+  border: none;
+  border-radius: 0;
 
   .MuiAccordionSummary-root {
     min-height: max-content;

@@ -685,7 +685,7 @@ const CreateNewStrategy = ({ open, onClose }) => {
                     : handleBack
                 }
               >
-                {activeStep === 0 || activeStep === 2 ? "Cancel" : "Back"}
+                {activeStep === 0 || activeStep === 2 ? "Close" : "Back"}
               </StyledButton>
               <StyledButton
                 variant="contained"
