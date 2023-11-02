@@ -20,6 +20,7 @@ import DraggableContainer from "../../components/UI/draggable-scroll-container/d
 import { ReactComponent as ButtonIconOne } from "../../assets/button-icon-1.svg";
 import { ReactComponent as ButtonIconTwo } from "../../assets/button-icon-2.svg";
 import CreateNewStrategy from "../../components/create-new-strategy/create-new-strategy.component";
+import FastStrategy from "../../components/fast-strategy/fast-strategy.component";
 
 const MotionWrapper = ({ key, children }) => {
   return (
@@ -50,6 +51,7 @@ const ProductListing = () => {
   const [isPriceSectionOpen, setIsPriceSectionOpen] = useState(false);
   const [isProfitOverlayOpen, setIsProfitOverlayOpen] = useState(false);
   const [isCreateNewStrategyOpen, setIsCreateNewStrategyOpen] = useState(false);
+  const [isFastStrategyAdjustmentOpen, setIsFastStrategyAdjustmentOpen] = useState(false);
 
   const handleStatusToggle = () => {
     setIsStatusOn(!isStatusOn);
@@ -84,6 +86,12 @@ const ProductListing = () => {
   };
   const handleCreateNewStrategyClose = () => {
     setIsCreateNewStrategyOpen(false);
+  };
+  const handleFastStrategyAdjustmentOpen = () => {
+    setIsFastStrategyAdjustmentOpen(true);
+  };
+  const handleFastStrategyAdjustmentClose = () => {
+    setIsFastStrategyAdjustmentOpen(false);
   };
 
   const handleResetFilters = () => {
@@ -151,7 +159,7 @@ const ProductListing = () => {
             <IconButton sx={{ p: 0 }} disableRipple disableTouchRipple onClick={handleCreateNewStrategyOpen}>
               <ButtonIconOne />
             </IconButton>
-            <IconButton sx={{ p: 0 }} disableRipple disableTouchRipple>
+            <IconButton sx={{ p: 0 }} disableRipple disableTouchRipple onClick={handleFastStrategyAdjustmentOpen}>
               <ButtonIconTwo />
             </IconButton>
           </Stack>
@@ -276,6 +284,7 @@ const ProductListing = () => {
       <PriceSection open={isPriceSectionOpen} onClose={handlePriceSectionClose} />
       <ProfitOverlay open={isProfitOverlayOpen} onClose={handleProfitOverlayClose} />
       <CreateNewStrategy open={isCreateNewStrategyOpen} onClose={handleCreateNewStrategyClose} />
+      <FastStrategy open={isFastStrategyAdjustmentOpen} onClose={handleFastStrategyAdjustmentClose}/>
     </Container>
   );
 };

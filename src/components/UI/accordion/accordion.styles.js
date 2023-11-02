@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { Accordion } from "@mui/material";
 
 export const StyledAccordion = styled(Accordion)`
-  background-color: #fff;
+  background-color: transparent !important;
   border: none !important;
   border-radius: 0 !important;
   box-shadow: none !important;

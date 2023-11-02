@@ -69,7 +69,7 @@ const CreateNewStrategy = ({ open, onClose }) => {
   const handleStrategyTypeChange = (newStrategyType) => {
     setStrategyType(newStrategyType);
 
-    if (nextButtonState === false) setNextButtonState(true);
+    if (nextButtonState === false) handleNextButtonStateActive();
     else return;
   };
   const handleMinMaxPriceChange = (newMinMaxPrice) => {
