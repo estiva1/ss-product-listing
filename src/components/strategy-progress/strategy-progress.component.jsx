@@ -29,12 +29,12 @@ const StepOne = ({ strategy = "Custom Rule Base", strategyType = "--" }) => {
   );
 };
 
-const StepTwo = ({ min = "--", max = "--" }) => {
+const StepTwo = ({ minMaxType = "Min/Max Type", min = "--", max = "--" }) => {
   return (
     <Stack spacing="-5px">
       <Stack spacing="8px" minWidth="50px" width="max-content">
-        <PrimaryText>Min/Max Type</PrimaryText>
-        <Stack direction="row" justifyContent="space-between" width="100%">
+        <PrimaryText>{minMaxType}</PrimaryText>
+        <Stack direction="row" gap="40px">
           <Stack spacing="2px">
             <MinMaxValue style={{ color: "#f90" }}>{min}</MinMaxValue>
             <SecondaryText>Min</SecondaryText>
@@ -52,7 +52,7 @@ const StepTwo = ({ min = "--", max = "--" }) => {
 
 const stepsLabels = ["Choose Strategy", "Set Min/Max Price"];
 
-const StrategyProgress = ({ strategy, strategyType, min, max, activeStep }) => {
+const StrategyProgress = ({ strategy, strategyType, minMaxType, min, max, activeStep }) => {
   return (
     <Box sx={{ maxWidth: 400 }}>
       <StyledStepper activeStep={activeStep} orientation="vertical">
@@ -63,7 +63,7 @@ const StrategyProgress = ({ strategy, strategyType, min, max, activeStep }) => {
               {index === 0 ? (
                 <StepOne strategy={strategy} strategyType={strategyType} />
               ) : index === 1 ? (
-                <StepTwo min={min} max={max} />
+                <StepTwo minMaxType={minMaxType} min={min} max={max} />
               ) : null}
             </StyledStepContent>
           </StyledStep>

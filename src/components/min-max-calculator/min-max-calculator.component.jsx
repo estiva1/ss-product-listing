@@ -13,9 +13,9 @@ import {
   ItemImage,
   ItemImageContainer,
   ItemInfo,
+  Label,
   PrimaryText,
   PrimaryTextBold,
-  SecondaryText,
 } from "./min-max-calculator.styles";
 
 const MinMaxCalculator = ({ label = "", itemName = "", material = "", asin = "", costPrice = "" }) => {
@@ -54,7 +54,7 @@ const MinMaxCalculator = ({ label = "", itemName = "", material = "", asin = "",
               <Ripple color="#1565D8" />
             </Button>
             <Stack direction="row" gap="8px" alignItems="center">
-              <SecondaryText>MIN return on investment</SecondaryText>
+              <Label>MIN return on investment</Label>
               <StyledTextField
                 sx={{ width: "65px" }}
                 placeholder="25"
@@ -69,7 +69,7 @@ const MinMaxCalculator = ({ label = "", itemName = "", material = "", asin = "",
             </Stack>
 
             <Stack direction="row" gap="8px" alignItems="center">
-              <SecondaryText>MAX return on investment</SecondaryText>
+              <Label>MAX return on investment</Label>
               <StyledTextField
                 sx={{ width: "65px" }}
                 placeholder="75"

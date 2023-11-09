@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { ScrollContainer } from "./draggable-scroll-container.styles";
 
-function useDraggableScroll(ref, options = { direction: "both" }) {
+function useDraggableScroll(ref, options = { direction: "horizontal" }) {
   if (process.env.NODE_ENV === "development") {
     if (typeof ref !== "object" || typeof ref.current === "undefined") {
       console.error("`useDraggableScroll` expects a single ref argument.");

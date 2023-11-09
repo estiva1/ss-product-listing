@@ -5,7 +5,7 @@ import Backdrop from "@mui/material/Backdrop";
 
 import { ModalContent, StyledModal } from "./custom-modal.styles";
 
-const CustomModal = ({ open, onClose, children, ...props }) => {
+const CustomModal = ({ open, onClose, position, children, ...props }) => {
   return (
     <StyledModal
       {...props}
@@ -21,7 +21,7 @@ const CustomModal = ({ open, onClose, children, ...props }) => {
       }}
     >
       <Fade in={open}>
-        <ModalContent>{children}</ModalContent>
+        <ModalContent position={position}>{children}</ModalContent>
       </Fade>
     </StyledModal>
   );

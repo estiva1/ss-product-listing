@@ -15,7 +15,7 @@ export const StyledContainer = styled(Container)`
   &.MuiContainer-root {
     width: ${contentMaxWidth};
     min-height: 200px;
-    //margin: 0px; // delete or comment this rule to center StyledContainer
+    margin-inline: 0px; // delete or comment this rule to center StyledContainer
     padding-left: 40px;
     padding-right: 40px;
   }

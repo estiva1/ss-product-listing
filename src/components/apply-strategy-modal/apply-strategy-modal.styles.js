@@ -2,9 +2,7 @@ import styled, { css } from "styled-components";
 import { Button } from "@mui/material";
 
 export const SaveStrategyModalContainer = styled.div`
-  width: 360px;
   max-width: 360px;
-  height: 220px;
   padding: 24px 16px 8px 16px;
   display: flex;
   flex-direction: column;

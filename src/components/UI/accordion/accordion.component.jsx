@@ -4,9 +4,9 @@ import ArrowOutwardOutlinedIcon from "@mui/icons-material/ArrowOutwardOutlined";
 
 import { StyledAccordion } from "./accordion.styles";
 
-const CustomAccordion = ({ summary, children }) => {
+const CustomAccordion = ({ summary, children, ...props }) => {
   return (
-    <StyledAccordion>
+    <StyledAccordion {...props}>
       <AccordionSummary
         expandIcon={<ArrowOutwardOutlinedIcon sx={{ fontSize: 14 }} />}
         //id="panel1a-header"

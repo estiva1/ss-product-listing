@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { Drawer } from "@mui/material";
 
 export const StyledDrawer = styled(Drawer)`
-  .MuiPaper-root {
+  .MuiDrawer-paper {
     border-radius: 0px 0px 30px 30px;
     border-bottom: 1px solid #00a3ff;
     box-shadow: 4px 4px 25px 0px rgba(111, 213, 246, 0.25);

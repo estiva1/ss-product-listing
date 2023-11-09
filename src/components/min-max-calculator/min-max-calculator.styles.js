@@ -46,7 +46,7 @@ export const PrimaryTextBold = styled(PrimaryText)`
   font-weight: 600;
 `;
 
-export const SecondaryText = styled.label`
+export const Label = styled.label`
   color: #4e5969;
   text-align: center;
   font-family: Titillium Web;

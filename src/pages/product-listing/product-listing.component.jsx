@@ -4,7 +4,7 @@ import DeletableChip from "../../components/UI/deletable-chip/deletable-chip.com
 import RepricerProductsTable from "../../components/UI/repricer-products-table/repricer-products-table.component";
 import { repricerProductsTableData } from "../../constants";
 import { Container, HeaderText, HeaderWrapper, Options, StyledPopover } from "./product-listing.styles";
-import { IconButton, Stack } from "@mui/material";
+import { Badge, IconButton, Stack } from "@mui/material";
 import Dropdown from "../../components/UI/dropdowns/simple-dropdown/dropdown.component";
 import IconButtonStretched, {
   BUTTON_TYPE_CLASSES,
@@ -24,15 +24,17 @@ import FastStrategy from "../../components/fast-strategy/fast-strategy.component
 
 const MotionWrapper = ({ key, children }) => {
   return (
-    <motion.div
-      key={key}
-      initial={{ y: 10, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      exit={{ y: -10, opacity: 0 }}
-      transition={{ duration: 0.2 }}
-    >
-      {children}
-    </motion.div>
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={key}
+        initial={{ y: 10, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        exit={{ y: -10, opacity: 0 }}
+        transition={{ duration: 0.2 }}
+      >
+        {children}
+      </motion.div>
+    </AnimatePresence>
   );
 };
 
@@ -136,14 +138,74 @@ const ProductListing = () => {
     "Clone ML II 5%-40%",
     "Not Attached",
   ];
-  const fullfilmentByData = ["FBA", "FBM"];
+  const fulfilmentByData = ["FBA", "FBM"];
   const costPriceData = ["Missing", "Present"];
+
+  function isDropdownNotEmpty(dropdown) {
+    return dropdown !== null && dropdown !== undefined;
+  }
 
   const isListingEmpty = listing === null;
   const isAddFilterBy = addFilterBy === null;
   const isSelectStrategy = selectStrategy === null;
   const isFulfilmentBy = fulfilmentBy === null;
   const isCostPrice = costPrice === null;
+
+  const chips = [
+    isListingEmpty ? null : (
+      <MotionWrapper key={0}>
+        <DeletableChip
+          filterType="Listing"
+          value={listing}
+          onDelete={handleListingClear}
+          clearInput={handleListingClear}
+        />
+      </MotionWrapper>
+    ),
+    isAddFilterBy ? null : (
+      <MotionWrapper key={1}>
+        <DeletableChip
+          filterType="Filtered by"
+          value={addFilterBy}
+          onDelete={handleAddFilterByClear}
+          clearInput={handleAddFilterByClear}
+        />
+      </MotionWrapper>
+    ),
+    isSelectStrategy ? null : (
+      <MotionWrapper key={2}>
+        <DeletableChip
+          filterType="Selected Strategy"
+          value={selectStrategy}
+          onDelete={handleSelectStrategyClear}
+          clearInput={handleSelectStrategyClear}
+        />
+      </MotionWrapper>
+    ),
+    isFulfilmentBy ? null : (
+      <MotionWrapper key={3}>
+        <DeletableChip
+          filterType="Fulfilment by"
+          value={fulfilmentBy}
+          onDelete={handleFulfilmentByClear}
+          clearInput={handleFulfilmentByClear}
+        />
+      </MotionWrapper>
+    ),
+    isCostPrice ? null : (
+      <MotionWrapper key={4}>
+        <DeletableChip
+          filterType="Cost Price"
+          value={costPrice}
+          onDelete={handleCostPriceClear}
+          clearInput={handleCostPriceClear}
+        />
+      </MotionWrapper>
+    ),
+  ];
+
+  const nonEmptyDropdowns = chips.filter(isDropdownNotEmpty);
+  const numberOfNonEmptyDropdowns = nonEmptyDropdowns.length;
 
   return (
     <Container>
@@ -168,86 +230,22 @@ const ProductListing = () => {
 
       <Stack direction="row" gap="10px" alignItems="center">
         <CustomizedSearchField style={{ width: "250px" }} placeholder="I am searching for Title, ASIN, SKU..." />
-        <IconButtonStretched
-          type="button"
-          aria-describedby={id}
-          buttonType={BUTTON_TYPE_CLASSES.whiteOutlined}
-          buttonText="Filters"
-          buttonImage={filterIcon}
-          onClick={handleOpenFiltersMenu}
-          noAnimations
-        >
-          <Ripple color="#1565D8" />
-        </IconButtonStretched>
+        <Badge badgeContent={numberOfNonEmptyDropdowns} color="primary">
+          <IconButtonStretched
+            type="button"
+            //aria-describedby={id}
+            buttonType={BUTTON_TYPE_CLASSES.whiteOutlined}
+            buttonText="Filters"
+            buttonImage={filterIcon}
+            onClick={handleOpenFiltersMenu}
+            noAnimations
+            style={{ direction: "rtl" }}
+          >
+            <Ripple color="#1565D8" />
+          </IconButtonStretched>
+        </Badge>
 
-        {(!isListingEmpty || !isAddFilterBy || !isSelectStrategy || !isFulfilmentBy || !isCostPrice) && (
-          <DraggableContainer>
-            <AnimatePresence mode="wait">
-              {!isListingEmpty && (
-                <MotionWrapper key={0}>
-                  <DeletableChip
-                    filterType="Listing"
-                    value={listing}
-                    onDelete={handleListingClear}
-                    clearInput={handleListingClear}
-                  />
-                </MotionWrapper>
-              )}
-            </AnimatePresence>
-
-            <AnimatePresence mode="wait">
-              {!isAddFilterBy && (
-                <MotionWrapper key={1}>
-                  <DeletableChip
-                    filterType="Filtered by"
-                    value={addFilterBy}
-                    onDelete={handleAddFilterByClear}
-                    clearInput={handleAddFilterByClear}
-                  />
-                </MotionWrapper>
-              )}
-            </AnimatePresence>
-
-            <AnimatePresence mode="wait">
-              {!isSelectStrategy && (
-                <MotionWrapper key={2}>
-                  <DeletableChip
-                    filterType="Selected Strategy"
-                    value={selectStrategy}
-                    onDelete={handleSelectStrategyClear}
-                    clearInput={handleSelectStrategyClear}
-                  />
-                </MotionWrapper>
-              )}
-            </AnimatePresence>
-
-            <AnimatePresence mode="wait">
-              {!isFulfilmentBy && (
-                <MotionWrapper key={3}>
-                  <DeletableChip
-                    filterType="Fulfilment by"
-                    value={fulfilmentBy}
-                    onDelete={handleFulfilmentByClear}
-                    clearInput={handleFulfilmentByClear}
-                  />
-                </MotionWrapper>
-              )}
-            </AnimatePresence>
-
-            <AnimatePresence mode="wait">
-              {!isCostPrice && (
-                <MotionWrapper key={4}>
-                  <DeletableChip
-                    filterType="Cost Price"
-                    value={costPrice}
-                    onDelete={handleCostPriceClear}
-                    clearInput={handleCostPriceClear}
-                  />
-                </MotionWrapper>
-              )}
-            </AnimatePresence>
-          </DraggableContainer>
-        )}
+        <DraggableContainer>{nonEmptyDropdowns}</DraggableContainer>
       </Stack>
 
       <StyledPopover
@@ -262,11 +260,31 @@ const ProductListing = () => {
         style={{ marginTop: "10px" }}
       >
         <Stack direction="column" gap="16px" width="200px">
-          <Dropdown data={chooseListingData} placeholder="Choose Listing" setSelectedValue={setListing} />
-          <Dropdown data={addFilterByData} placeholder="Add Filter by" setSelectedValue={setAddFilterBy} />
-          <Dropdown data={selectStrategyData} placeholder="Select Strategy" setSelectedValue={setSelectStrategy} />
-          <Dropdown data={fullfilmentByData} placeholder="Fulfilment by" setSelectedValue={setFulfilmentBy} />
-          <Dropdown data={costPriceData} placeholder="Cost Price" setSelectedValue={setCostPrice} />
+          <Dropdown
+            data={chooseListingData}
+            value={listing}
+            placeholder="Choose Listing"
+            setSelectedValue={setListing}
+          />
+          <Dropdown
+            data={addFilterByData}
+            value={addFilterBy}
+            placeholder="Add Filter by"
+            setSelectedValue={setAddFilterBy}
+          />
+          <Dropdown
+            data={selectStrategyData}
+            value={selectStrategy}
+            placeholder="Select Strategy"
+            setSelectedValue={setSelectStrategy}
+          />
+          <Dropdown
+            data={fulfilmentByData}
+            value={fulfilmentBy}
+            placeholder="Fulfilment by"
+            setSelectedValue={setFulfilmentBy}
+          />
+          <Dropdown data={costPriceData} value={costPrice} placeholder="Cost Price" setSelectedValue={setCostPrice} />
           <IconButtonStretched
             type="button"
             buttonType={BUTTON_TYPE_CLASSES.blueFilled}
@@ -284,7 +302,7 @@ const ProductListing = () => {
       <PriceSection open={isPriceSectionOpen} onClose={handlePriceSectionClose} />
       <ProfitOverlay open={isProfitOverlayOpen} onClose={handleProfitOverlayClose} />
       <CreateNewStrategy open={isCreateNewStrategyOpen} onClose={handleCreateNewStrategyClose} />
-      <FastStrategy open={isFastStrategyAdjustmentOpen} onClose={handleFastStrategyAdjustmentClose}/>
+      <FastStrategy open={isFastStrategyAdjustmentOpen} onClose={handleFastStrategyAdjustmentClose} />
     </Container>
   );
 };

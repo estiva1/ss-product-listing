@@ -47,12 +47,14 @@ const CreateNewStrategy = ({ open, onClose }) => {
   const currenciesData = ["$", "€", "฿", "¥"];
   const dropdownsData = ["Option 1", "Option 2", "Option 3"];
 
+  const [min, setMin] = useState("--");
+  const [max, setMax] = useState("--");
   const [currency, setCurrency] = useState("$");
+  const [minMaxType, setMinMaxType] = useState("Min/Max Type");
   const [strategyType, setStrategyType] = useState("--");
   const [strategy, setStrategy] = useState("Custom Rule Base");
 
   const [activeStep, setActiveStep] = useState(0);
-  const [minMaxPrice, setMinMaxPrice] = useState(null);
   const [nextButtonState, setNextButtonState] = useState(false);
   const [isSaveStrategyModalOpen, setIsSaveStrategyModalOpen] = useState(false);
 
@@ -72,8 +74,32 @@ const CreateNewStrategy = ({ open, onClose }) => {
     if (nextButtonState === false) handleNextButtonStateActive();
     else return;
   };
-  const handleMinMaxPriceChange = (newMinMaxPrice) => {
-    setMinMaxPrice(newMinMaxPrice);
+  const handleMinMaxTypeChange = (newMinMaxType) => {
+    switch (newMinMaxType) {
+      case "Manual":
+        setMinMaxType(newMinMaxType);
+        setMin("65%");
+        setMax("83%");
+        break;
+      case "ROI":
+        setMinMaxType(newMinMaxType);
+        setMin("80%");
+        setMax("99%");
+        break;
+      case "Profit Margin":
+        setMinMaxType(newMinMaxType);
+        setMin("74%");
+        setMax("80%");
+        break;
+      case "Fixed Profit":
+        setMinMaxType(newMinMaxType);
+        setMin("77%");
+        setMax("92%");
+        break;
+
+      default:
+        break;
+    }
     if (nextButtonState === false) setNextButtonState(true);
     else return;
   };
@@ -104,13 +130,13 @@ const CreateNewStrategy = ({ open, onClose }) => {
   };
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    if (nextButtonState === false) setNextButtonState(true);
+    if (nextButtonState === false) handleNextButtonStateActive();
     else return;
   };
   const handleReset = () => {
     setActiveStep(0);
     setStrategyType("--");
-    setNextButtonState(false);
+    handleNextButtonStateDisabled();
   };
 
   return (
@@ -125,7 +151,15 @@ const CreateNewStrategy = ({ open, onClose }) => {
         <Divider sx={{ mt: "22px", mb: "32px", width: "100%" }} />
 
         <Stack direction="row" gap="32px" alignItems="start">
-          <StrategyProgress strategy={strategy} strategyType={strategyType} activeStep={activeStep} />
+          <StrategyProgress
+            strategy={strategy}
+            strategyType={strategyType}
+            minMaxType={minMaxType}
+            min={min}
+            max={max}
+            activeStep={activeStep}
+          />
+
           <Divider orientation="vertical" flexItem />
 
           <StyledContainer>
@@ -548,7 +582,7 @@ const CreateNewStrategy = ({ open, onClose }) => {
                             text="Manual"
                             labelTop="Manual"
                             labelBottom="Manual min/max for each listing"
-                            onClick={() => handleMinMaxPriceChange("manual")}
+                            onClick={() => handleMinMaxTypeChange("Manual")}
                           >
                             <ManualIcon />
                           </EnhancedStrategyButton>
@@ -556,7 +590,7 @@ const CreateNewStrategy = ({ open, onClose }) => {
                             text="ROI"
                             labelTop="Manual"
                             labelBottom="Calculated based on return on  investment"
-                            onClick={() => handleMinMaxPriceChange("roi")}
+                            onClick={() => handleMinMaxTypeChange("ROI")}
                           >
                             <RoiIcon />
                           </EnhancedStrategyButton>
@@ -567,7 +601,7 @@ const CreateNewStrategy = ({ open, onClose }) => {
                             text="Profit Margin"
                             labelTop="Automatic"
                             labelBottom="Calculated based on profit margin"
-                            onClick={() => handleMinMaxPriceChange("profitMargin")}
+                            onClick={() => handleMinMaxTypeChange("Profit Margin")}
                           >
                             <ProfitMarginIcon />
                           </EnhancedStrategyButton>
@@ -575,15 +609,15 @@ const CreateNewStrategy = ({ open, onClose }) => {
                             text="Fixed Profit"
                             labelTop="Automatic"
                             labelBottom="Calculated based on fixed amount of profit"
-                            onClick={() => handleMinMaxPriceChange("fixedProfit")}
+                            onClick={() => handleMinMaxTypeChange("Fixed Profit")}
                           >
                             <FixedProfitIcon />
                           </EnhancedStrategyButton>
                         </Stack>
                       </Stack>
                       {(() => {
-                        switch (minMaxPrice) {
-                          case "manual":
+                        switch (minMaxType) {
+                          case "Manual":
                             return (
                               <Stack spacing="40px">
                                 <InfoBar
@@ -593,7 +627,7 @@ const CreateNewStrategy = ({ open, onClose }) => {
                                 <FileUploader />
                               </Stack>
                             );
-                          case "roi":
+                          case "ROI":
                             return (
                               <Stack spacing="40px">
                                 <InfoBar
@@ -610,7 +644,7 @@ const CreateNewStrategy = ({ open, onClose }) => {
                                 />
                               </Stack>
                             );
-                          case "profitMargin":
+                          case "Profit Margin":
                             return (
                               <Stack spacing="40px">
                                 <InfoBar
@@ -626,7 +660,7 @@ const CreateNewStrategy = ({ open, onClose }) => {
                                 />
                               </Stack>
                             );
-                          case "fixedProfit":
+                          case "Fixed Profit":
                             return (
                               <Stack spacing="40px">
                                 <InfoBar
