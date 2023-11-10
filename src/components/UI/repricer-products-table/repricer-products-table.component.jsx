@@ -89,7 +89,7 @@ const getMarginDifference = (number) => {
         {marginDifference > 0 ? "increased" : marginDifference < 0 ? "decreased" : "not changed"}:
       </SmallText>
       <Stack direction="row" alignItems="center">
-        <SmallTextBold difference={marginDifference}>{marginDifference}%</SmallTextBold>
+        <SmallTextBold $difference={marginDifference}>{marginDifference}%</SmallTextBold>
         {marginDifference > 0 ? (
           <NorthRoundedIcon
             sx={{
@@ -456,14 +456,14 @@ const RepricerProductsTable = ({ data }) => {
                       <ItemImage src={testProductImage} style={{ width: "30px", height: "30px" }} loading="lazy" />
                       <Stack direction="column" gap="6px">
                         <Tooltip title={row.product} placement="top">
-                          <PrimaryTextHighlighted clamp>{row.product}</PrimaryTextHighlighted>
+                          <PrimaryTextHighlighted $clamp>{row.product}</PrimaryTextHighlighted>
                         </Tooltip>
 
                         <Stack direction="column" gap="4px">
                           <Stack direction="row">
                             <SmallTextBold style={{ color: "#979797", whiteSpace: "nowrap" }}>SKU:&nbsp;</SmallTextBold>
                             <Tooltip title={row.sku} placement="top">
-                              <SmallTextBold clamp>{row.sku}</SmallTextBold>
+                              <SmallTextBold $clamp>{row.sku}</SmallTextBold>
                             </Tooltip>
                           </Stack>
 
@@ -472,7 +472,7 @@ const RepricerProductsTable = ({ data }) => {
                               ASIN:&nbsp;
                             </SmallTextBold>
                             <Tooltip title={row.asin} placement="top">
-                              <SmallTextBold clamp>{row.asin}</SmallTextBold>
+                              <SmallTextBold $clamp>{row.asin}</SmallTextBold>
                             </Tooltip>
                           </Stack>
                         </Stack>
@@ -487,7 +487,7 @@ const RepricerProductsTable = ({ data }) => {
                   </StyledTableCell>
                   <StyledTableCell align="left">
                     <Stack direction="column" gap="4px">
-                      <MulticolorThumbnail status={row.status} enlarged />
+                      <MulticolorThumbnail status={row.status} $enlarged />
                       <SmallTextBold style={{ color: "#979797" }}>New Product</SmallTextBold>
                     </Stack>
                   </StyledTableCell>
@@ -516,7 +516,9 @@ const RepricerProductsTable = ({ data }) => {
                       <PrimaryText>${row.price.toFixed(2)}</PrimaryText>
                       <SmallText style={{ display: "inline-flex", whiteSpace: "nowrap" }}>
                         Buy Box&nbsp;
-                        <SmallTextBold>${row.price.toFixed(2)}</SmallTextBold>
+                        <span>
+                          <SmallTextBold>${row.price.toFixed(2)}</SmallTextBold>
+                        </span>
                       </SmallText>
                     </Stack>
                   </StyledTableCell>
@@ -534,11 +536,15 @@ const RepricerProductsTable = ({ data }) => {
                       <Stack direction="column" gap="4px">
                         <SmallText style={{ color: "#FF9900", display: "inline-flex", whiteSpace: "nowrap" }}>
                           Min&nbsp;
-                          <SmallTextBold style={{ color: "#FF9900" }}>{row.repricingMin}</SmallTextBold>
+                          <span>
+                            <SmallTextBold style={{ color: "#FF9900" }}>{row.repricingMin}</SmallTextBold>
+                          </span>
                         </SmallText>
                         <SmallText style={{ color: "#009C34", display: "inline-flex", whiteSpace: "nowrap" }}>
                           Max&nbsp;
-                          <SmallTextBold style={{ color: "#009C34" }}>{row.repricingMax}</SmallTextBold>
+                          <span>
+                            <SmallTextBold style={{ color: "#009C34" }}>{row.repricingMax}</SmallTextBold>
+                          </span>
                         </SmallText>
                       </Stack>
                       <IconButton aria-label="edit">
@@ -562,7 +568,9 @@ const RepricerProductsTable = ({ data }) => {
 
                       <SmallText style={{ display: "inline-flex", whiteSpace: "nowrap", color: "#0057D3" }}>
                         Current:&nbsp;
-                        <SmallTextBold style={{ color: "#0057D3", fontWeight: 700 }}>{row.strategy}</SmallTextBold>
+                        <span>
+                          <SmallTextBold style={{ color: "#0057D3", fontWeight: 700 }}>{row.strategy}</SmallTextBold>
+                        </span>
                       </SmallText>
                     </Stack>
                   </StyledTableCell>

@@ -24,7 +24,7 @@ export const StyledSlider = styled.span`
   cursor: pointer;
   inset: 0;
   background-color: #fff;
-  box-shadow: inset 0px 0px 0px 1px ${(props) => (props.isOn ? "#1565D8" : "#dadfe3")};
+  box-shadow: inset 0px 0px 0px 1px ${({$isOn}) => ($isOn ? "#1565D8" : "#dadfe3")};
   transition: 0.4s ease;
   border-radius: 12px;
 `;
@@ -36,11 +36,11 @@ export const StyledSliderButton = styled.span`
   height: 16px;
   left: 4px;
   bottom: 4px;
-  background-color: ${(props) => (props.isOn ? "#1565D8" : "#E6E6E6")};
+  background-color: ${({$isOn}) => ($isOn ? "#1565D8" : "#E6E6E6")};
   transition: 0.4s ease;
   border-radius: 50%;
-  box-shadow: ${(props) => (props.isOn ? "-1px" : "1px")} 0px 3px 0 rgb(0 35 11 / 25%);
-  transform: ${(props) => (props.isOn ? "translateX(100%)" : "translateX(0)")};
+  box-shadow: ${({$isOn}) => ($isOn ? "-1px" : "1px")} 0px 3px 0 rgb(0 35 11 / 25%);
+  transform: ${({$isOn}) => ($isOn ? "translateX(100%)" : "translateX(0)")};
 `;
 
 export const SliderText = styled.h4`
@@ -48,7 +48,7 @@ export const SliderText = styled.h4`
   top: 50%;
   transform: translateY(-50%);
   margin: 0;
-  margin-left: ${(props) => (props.isOn ? "12px" : "28px")};
+  margin-left: ${({$isOn}) => ($isOn ? "12px" : "28px")};
   color: #616980;
   font-feature-settings: "clig" off, "liga" off;
   font-family: Titillium Web;

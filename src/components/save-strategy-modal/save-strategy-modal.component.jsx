@@ -17,11 +17,16 @@ import {
   StyledButton,
 } from "./save-strategy-modal.styles";
 
-const SaveStrategyModal = ({ position, isSaved, open, onClose }) => {
+const SaveStrategyModal = ({ position, open, onClose }) => {
+  const [isStrategySaved, setIsStrategySaved] = useState(false);
+
+  const handleSaveStrategy = () => {
+    setIsStrategySaved(true);
+  };
   return (
     <CustomModal position={position} open={open} onClose={onClose}>
       <SaveStrategyModalContainer>
-        {!isSaved ? (
+        {!isStrategySaved ? (
           <Stack spacing="32px" alignItems="center">
             <PrimaryText>Let's name your Strategy and save it to your templates!</PrimaryText>
             <StyledTextField sx={{ mb: "8px" }} placeholder="Strategy name" fullWidth />
@@ -29,7 +34,7 @@ const SaveStrategyModal = ({ position, isSaved, open, onClose }) => {
               <StyledButton variant="text" onClick={onClose}>
                 Skip
               </StyledButton>
-              <StyledButton variant="contained" >
+              <StyledButton variant="contained" onClick={handleSaveStrategy}>
                 Save as a Template
               </StyledButton>
             </Stack>

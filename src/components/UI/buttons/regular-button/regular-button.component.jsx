@@ -46,7 +46,7 @@ export const Ripple = ({ duration = 850, color = "#fff" }) => {
   };
 
   return (
-    <RippleContainer duration={duration} color={color} onMouseDown={addRipple}>
+    <RippleContainer $duration={duration} color={color} onMouseDown={addRipple}>
       {rippleArray.length > 0 &&
         rippleArray.map((ripple, index) => {
           return (

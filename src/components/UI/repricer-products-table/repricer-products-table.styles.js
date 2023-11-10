@@ -33,7 +33,7 @@ export const StyledTableCell = mStyled(TableCell)(() => ({
     lineHeight: "1rem",
     letterSpacing: "0.00375rem",
     padding: "7px 20px 7px 0px",
-    "&:first-child": {
+    "&:first-of-type": {
       // checkboxes padding is 9px
       paddingLeft: "11px",
       paddingRight: "3px",
@@ -60,7 +60,7 @@ export const StyledTableCell = mStyled(TableCell)(() => ({
     fontFamily: "Titillium Web",
     height: "70px", // minHeight is 67px
     padding: "7px 20px 7px 0px",
-    "&:first-child": {
+    "&:first-of-type": {
       // checkboxes padding is 9px
       paddingLeft: "11px",
       paddingRight: "3px",
@@ -75,7 +75,7 @@ export const ItemImage = styled.img`
 `;
 
 const applyClampStyles = (props) => {
-  if (props.clamp) {
+  if (props.$clamp) {
     return css`
       display: -webkit-box;
       -webkit-box-orient: vertical;
@@ -115,7 +115,7 @@ export const SecondaryText = styled.h4`
 `;
 
 export const SmallText = styled.h4`
-  color: ${({ difference }) => (difference > 0 ? "#009C34" : difference < 0 ? "#CF0909" : "#4e5969")};
+  color: ${({ $difference }) => ($difference > 0 ? "#009C34" : $difference < 0 ? "#CF0909" : "#4e5969")};
   font-size: 0.625rem;
   font-style: normal;
   font-weight: 400;

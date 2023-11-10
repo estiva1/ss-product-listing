@@ -92,7 +92,6 @@ const FastStrategy = ({ open, onClose }) => {
   const [currency, setCurrency] = useState("$");
 
   const [isAlertOpen, setIsAlertOpen] = useState(false);
-  const [isStrategySaved, setIsStrategySaved] = useState(false);
   const [isSaveStrategyModalOpen, setIsSaveStrategyModalOpen] = useState(false);
   const [isApplyStrategyModalOpen, setIsApplyStrategyModalOpen] = useState(false);
 
@@ -113,10 +112,6 @@ const FastStrategy = ({ open, onClose }) => {
   };
   const handleApplyStrategyModalClose = () => {
     setIsApplyStrategyModalOpen(false);
-  };
-
-  const handleSaveStrategy = () => {
-    setIsStrategySaved(true);
   };
 
   const handleNext = () => {

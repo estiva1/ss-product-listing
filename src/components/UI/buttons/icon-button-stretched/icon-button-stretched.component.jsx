@@ -49,7 +49,7 @@ export const Ripple = ({ duration = 850, color = "#fff" }) => {
   };
 
   return (
-    <RippleContainer duration={duration} color={color} onMouseDown={addRipple}>
+    <RippleContainer $duration={duration} color={color} onMouseDown={addRipple}>
       {rippleArray.length > 0 &&
         rippleArray.map((ripple, index) => {
           return (
@@ -89,7 +89,7 @@ const IconButtonStretched = ({ buttonType, buttonText = "", buttonImage = null, 
     <CustomIconButtonStretched {...props}>
       <Stack direction="row" gap="8px" alignItems="center" justifyContent="space-between">
         <ButtonText>{buttonText}</ButtonText>
-        <ButtonImage src={buttonImage} style={{ width: "16px", height: "16px" }} noAnimations={noAnimations} />
+        <ButtonImage src={buttonImage} style={{ width: "16px", height: "16px" }} $noAnimations={noAnimations} />
       </Stack>
       {children}
     </CustomIconButtonStretched>

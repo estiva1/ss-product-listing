@@ -14,7 +14,7 @@ export const RippleContainer = styled.div`
     opacity: 0.75;
     background-color: ${(props) => props.color};
     animation-name: ripple;
-    animation-duration: ${(props) => props.duration}ms;
+    animation-duration: ${(props) => props.$duration}ms;
   }
 
   @keyframes ripple {

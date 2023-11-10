@@ -9,9 +9,9 @@ export const RippleContainer = styled.div`
     border-radius: 100%;
     position: absolute;
     opacity: 0.75;
-    background-color: ${(props) => props.color};
+    background-color: ${({color}) => color};
     animation-name: ripple;
-    animation-duration: ${(props) => props.duration}ms;
+    animation-duration: ${({$duration}) => $duration}ms;
   }
 
   @keyframes ripple {
@@ -26,7 +26,7 @@ export const ButtonImage = styled.img`
   width: 100%;
   height: auto;
   aspect-ratio: attr(width) / attr(height);
-  transition: ${(props) => props.noAnimations ? "none" : "transform 1s ease-in-out"};
+  transition: ${({$noAnimations}) => $noAnimations ? "none" : "transform 1s ease-in-out"};
 `;
 
 export const BaseButton = styled.button`

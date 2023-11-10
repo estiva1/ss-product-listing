@@ -15,24 +15,24 @@ const ProfitOverlay = ({ open, onClose }) => {
       <Container>
         <PrimaryText>Profit</PrimaryText>
 
-        {sectionOne.map((row) => (
-          <Stack direction="row" width="100%" alignItems="center" justifyContent="space-between">
+        {sectionOne.map((row, index) => (
+          <Stack key={index} direction="row" width="100%" alignItems="center" justifyContent="space-between">
             <SecondaryText>{row}</SecondaryText>
             <PrimaryTextThin>${value.toFixed(2)}</PrimaryTextThin>
           </Stack>
         ))}
         <Divider sx={{ width: "100%" }} />
 
-        {sectionTwo.map((row) => (
-          <Stack direction="row" width="100%" alignItems="center" justifyContent="space-between">
+        {sectionTwo.map((row, index) => (
+          <Stack key={index} direction="row" width="100%" alignItems="center" justifyContent="space-between">
             <SecondaryText>{row}</SecondaryText>
             <PrimaryTextThin>${value.toFixed(2)}</PrimaryTextThin>
           </Stack>
         ))}
         <Divider sx={{ width: "100%" }} />
 
-        {sectionThree.map((row) => (
-          <Stack direction="row" width="100%" alignItems="center" justifyContent="space-between">
+        {sectionThree.map((row, index) => (
+          <Stack key={index} direction="row" width="100%" alignItems="center" justifyContent="space-between">
             <SecondaryText>{row}</SecondaryText>
             <PrimaryTextThin style={{ color: "#000" }}>
               {row === "Profit %" ? `${value.toFixed(2)}%` : `$${value.toFixed(2)}`}
