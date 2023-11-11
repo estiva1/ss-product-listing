@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useDeferredValue, useState } from "react";
 import BigSwitch from "../../components/UI/switches/big-switch/big-switch.component";
 import DeletableChip from "../../components/UI/deletable-chip/deletable-chip.component";
 import RepricerProductsTable from "../../components/UI/repricer-products-table/repricer-products-table.component";
@@ -39,21 +39,29 @@ const MotionWrapper = ({ key, children }) => {
 };
 
 const ProductListing = () => {
-  const [isStatusOn, setIsStatusOn] = useState(false);
-  const [isRepriceFilterOn, setIsRepriceFilterOn] = useState(false);
-  const [isBuyBoxWinnerOn, setIsBuyBoxWinnerOn] = useState(false);
+  const [itemFilter, setItemFilter] = useState("");
+  const deferredItemFilter = useDeferredValue(itemFilter);
+
   const [anchorEl, setAnchorEl] = useState(null);
+  const [isStatusOn, setIsStatusOn] = useState(false);
+  const [isBuyBoxWinnerOn, setIsBuyBoxWinnerOn] = useState(false);
+  const [isRepriceFilterOn, setIsRepriceFilterOn] = useState(false);
 
   const [listing, setListing] = useState(null);
-  const [addFilterBy, setAddFilterBy] = useState(null);
-  const [selectStrategy, setSelectStrategy] = useState(null);
-  const [fulfilmentBy, setFulfilmentBy] = useState(null);
   const [costPrice, setCostPrice] = useState(null);
+  const [addFilterBy, setAddFilterBy] = useState(null);
+  const [fulfilmentBy, setFulfilmentBy] = useState(null);
+  const [selectStrategy, setSelectStrategy] = useState(null);
 
   const [isPriceSectionOpen, setIsPriceSectionOpen] = useState(false);
   const [isProfitOverlayOpen, setIsProfitOverlayOpen] = useState(false);
   const [isCreateNewStrategyOpen, setIsCreateNewStrategyOpen] = useState(false);
   const [isFastStrategyAdjustmentOpen, setIsFastStrategyAdjustmentOpen] = useState(false);
+
+  const handleItemFilterChange = (event) => {
+    setItemFilter(event.target.value);
+    console.log("Deferred Item Filter:", deferredItemFilter);
+  };
 
   const handleStatusToggle = () => {
     setIsStatusOn(!isStatusOn);
@@ -229,7 +237,12 @@ const ProductListing = () => {
       </HeaderWrapper>
 
       <Stack direction="row" gap="10px" alignItems="center">
-        <CustomizedSearchField style={{ width: "250px" }} placeholder="I am searching for Title, ASIN, SKU..." />
+        <CustomizedSearchField
+          style={{ width: "250px" }}
+          placeholder="I am searching for Title, ASIN, SKU..."
+          value={itemFilter}
+          onChange={handleItemFilterChange}
+        />
         <Badge badgeContent={numberOfNonEmptyDropdowns} color="primary">
           <IconButtonStretched
             type="button"
@@ -298,7 +311,7 @@ const ProductListing = () => {
         </Stack>
       </StyledPopover>
 
-      <RepricerProductsTable data={repricerProductsTableData} />
+      <RepricerProductsTable data={repricerProductsTableData} itemFilter={deferredItemFilter} />
       <PriceSection open={isPriceSectionOpen} onClose={handlePriceSectionClose} />
       <ProfitOverlay open={isProfitOverlayOpen} onClose={handleProfitOverlayClose} />
       <CreateNewStrategy open={isCreateNewStrategyOpen} onClose={handleCreateNewStrategyClose} />

@@ -54,10 +54,10 @@ export const HintText = styled.span`
 const applyClampStyles = (props) => {
   if (props.clamp) {
     return css`
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 1;
+      text-overflow: ellipsis;
       overflow: hidden;
+      white-space: nowrap;
+      -webkit-line-clamp: 1;
     `;
   }
   return "";

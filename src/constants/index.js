@@ -22,7 +22,7 @@ export const repricerProductsTableData = [
   },
   {
     id: 2,
-    product: "Pports Watch.....",
+    product: "Pports Waaaaaaaaaaaaaatch.....",
     sku: "EVI-45773-PK2",
     asin: "B001OI48SW",
     marginDifference: -1.576,

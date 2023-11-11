@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { IconButton, Stack } from "@mui/material";
-import { AnimatePresence, motion } from "framer-motion";
 
 import CustomModal from "../UI/modal/custom-modal.component";
 import StyledTextField from "../UI/text-fields/regular-text-fields/styled-text-field/styled-text-field.component";

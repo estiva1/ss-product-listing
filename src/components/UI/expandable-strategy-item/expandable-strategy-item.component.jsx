@@ -1,10 +1,11 @@
 import React, { useState } from "react";
+
 import { styled } from "@mui/material/styles";
+import { Stack } from "@mui/material";
 import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
+import MuiAccordionDetails from "@mui/material/AccordionDetails";
+import MuiAccordionSummary from "@mui/material/AccordionSummary";
+
 import {
   Description,
   DescriptionHighlighted,
@@ -14,11 +15,7 @@ import {
   Label,
   LightBulbIcon,
   StyledAccordion,
-  StyledFormControlLabel,
 } from "./expandable-strategy-item.styles";
-import { Accordion, Stack } from "@mui/material";
-import MuiAccordionDetails from "@mui/material/AccordionDetails";
-import MuiAccordionSummary from "@mui/material/AccordionSummary";
 
 const BpIcon = styled("span")(() => ({
   borderRadius: "50%",
@@ -68,7 +65,8 @@ const ExpandableStrategyItem = ({
   currentStrategy,
   numberOfProducts = 0,
   disabled,
-  children = () => {},
+  children,
+  isContentWithin,
   ...props
 }) => {
   const [accordionExpanded, setAccordionExpanded] = useState(false);
@@ -129,16 +127,16 @@ const ExpandableStrategyItem = ({
       <StyledAccordion expanded={accordionExpanded} disableGutters elevation={0} square>
         <MuiAccordionSummary></MuiAccordionSummary>
         <MuiAccordionDetails
-          sx={{ ml: "30px", mt: accordionExpanded ? "10px" : 0, transition: "all 0.35s ease" }}
+          sx={{ ml: "30px", mt: accordionExpanded ? (isContentWithin ? "10px" : 0) : 0, transition: "all 0.35s ease" }}
         >
           {children}
         </MuiAccordionDetails>
       </StyledAccordion>
 
       <Stack sx={{ display: currentStrategy ? "flex" : "none" }} marginLeft="48px">
-        <Description>(Your Current Strategy)</Description>
+        <Description>{`(Your Current Strategy)`}</Description>
         <DescriptionHighlighted>
-          This strategy is assigned to {numberOfProducts} {numberOfProducts > 1 ? "products" : "product"}
+          {`This strategy is assigned to ${numberOfProducts} ${numberOfProducts > 1 ? "products" : "product"}`}
         </DescriptionHighlighted>
       </Stack>
     </Stack>

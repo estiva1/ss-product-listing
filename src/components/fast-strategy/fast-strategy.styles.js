@@ -9,7 +9,7 @@ const dividerWidth = `calc((100% - (${rowWidth}px * 4) - (${rowPadding}px * 2)) 
 
 export const FastStrategyContent = styled.div`
   position: relative;
-  background-color: #fff;  
+  background-color: #fff;
 `;
 
 export const FastStrategyNavigation = styled.div`
@@ -220,29 +220,6 @@ export const Label = styled.label`
   font-weight: 600;
   line-height: 1rem;
   letter-spacing: 0.00375rem;
-`;
-
-export const MyStrategiesContainer = styled.div`
-  width: 290px;
-  overflow-y: scroll;
-
-  &::-webkit-scrollbar {
-    width: 0.4em;
-  }
-  &::-webkit-scrollbar-track {
-    background-color: transparent;
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: transparent;
-    &:hover {
-      background-color: hsl(0, 0%, 81.2%);
-      border-radius: 0.2em;
-    }
-  }
-  &:hover::-webkit-scrollbar-thumb {
-    background-color: hsl(0, 0%, 81.2%);
-    border-radius: 0.2em;
-  }
 `;
 
 export const RuleRow = styled.div`

@@ -1,5 +1,21 @@
 import React, { useEffect, useState } from "react";
+
+import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
+import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
+import { Alert, Box, Divider, InputAdornment, Snackbar, Stack } from "@mui/material";
+
+import InfoBar from "../UI/hints/info-bar/info-bar.component";
+import CustomAccordion from "../UI/accordion/accordion.component";
 import TemporaryDrawer from "../UI/top-drawer/top-drawer.component";
+import Dropdown from "../UI/dropdowns/simple-dropdown/dropdown.component";
+import StrategySticker from "../UI/strategy-sticker/strategy-sticker.component";
+import RegularSwitch from "../UI/switches/regular-switch/regular-switch.component";
+import ExpandableStrategyItem from "../UI/expandable-strategy-item/expandable-strategy-item.component";
+import StyledTextField from "../UI/text-fields/regular-text-fields/styled-text-field/styled-text-field.component";
+
+import SaveStrategyModal from "../save-strategy-modal/save-strategy-modal.component";
+import ApplyStrategyModal from "../apply-strategy-modal/apply-strategy-modal.component";
+
 import {
   Column,
   ContentRow,
@@ -9,7 +25,6 @@ import {
   HeadingPrimary,
   IconRoundBox,
   Label,
-  MyStrategiesContainer,
   PointedLightbulbIcon,
   RuleRow,
   SpinningGearIcon,
@@ -18,19 +33,6 @@ import {
   StyledDivider,
   TechnologyIcon,
 } from "./fast-strategy.styles";
-import StrategySticker from "../UI/strategy-sticker/strategy-sticker.component";
-import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
-import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
-import { Alert, Box, Divider, InputAdornment, Snackbar, Stack } from "@mui/material";
-
-import CustomAccordion from "../UI/accordion/accordion.component";
-import Dropdown from "../UI/dropdowns/simple-dropdown/dropdown.component";
-import RegularSwitch from "../UI/switches/regular-switch/regular-switch.component";
-import StyledTextField from "../UI/text-fields/regular-text-fields/styled-text-field/styled-text-field.component";
-import InfoBar from "../UI/hints/info-bar/info-bar.component";
-import ExpandableStrategyItem from "../UI/expandable-strategy-item/expandable-strategy-item.component";
-import ApplyStrategyModal from "../apply-strategy-modal/apply-strategy-modal.component";
-import SaveStrategyModal from "../save-strategy-modal/save-strategy-modal.component";
 
 const AlertBar = ({ open, onClose }) => {
   return (
@@ -78,6 +80,10 @@ const MinMaxTypeAutoContent = () => {
       </Stack>
     </div>
   );
+};
+
+const NoContent = () => {
+  return <Label>¯\_(ツ)_/¯</Label>;
 };
 
 const FastStrategy = ({ open, onClose }) => {
@@ -162,18 +168,22 @@ const FastStrategy = ({ open, onClose }) => {
         "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet.",
       isCurrentStrategy: true,
       numberOfProducts: 33,
+      children: null,
     },
     {
       label: "Strategy 1",
       isCurrentStrategy: false,
+      children: null,
     },
     {
       label: "abc",
       isCurrentStrategy: false,
+      children: null,
     },
     {
       label: "winORlose",
       isCurrentStrategy: false,
+      children: null,
     },
   ];
 
@@ -182,21 +192,25 @@ const FastStrategy = ({ open, onClose }) => {
       label: "MadMax",
       hintText:
         "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet.",
+      children: <NoContent />,
     },
     {
       label: "Slow and Steady",
       hintText:
         "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet.",
+      children: null,
     },
     {
       label: "Buy Box Strategy",
       hintText:
         "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet.",
+      children: null,
     },
     {
       label: "Low Price Strategy",
       hintText:
         "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet.",
+      children: <NoContent />,
     },
   ];
 
@@ -206,6 +220,7 @@ const FastStrategy = ({ open, onClose }) => {
       labelDescription: "Manual",
       hintText:
         "You'll have to manually specify the minimum and maximum prices for each listing under the Catalogs page.",
+      children: <NoContent />,
     },
     {
       label: "ROI",
@@ -289,36 +304,34 @@ const FastStrategy = ({ open, onClose }) => {
 
         <ContentRow activeStep={activeStep}>
           <Column>
-            <MyStrategiesContainer>
-              <Stack spacing="20px">
-                <Stack direction="row" gap="10px" alignItems="center">
-                  <IconRoundBox style={{ background: activeStep < 1 ? "#c4c4c4" : "#009c34" }}>
-                    <PointedLightbulbIcon />
-                  </IconRoundBox>
-                  <HeadingPrimary style={{ color: activeStep < 1 ? "#c4c4c4" : "#009c34" }}>
-                    My Strategies
-                  </HeadingPrimary>
-                </Stack>
-
-                {myStrategies.map((myStrategy, index) => (
-                  <ExpandableStrategyItem
-                    key={index}
-                    clamp
-                    value={myStrategy.label}
-                    label={myStrategy.label}
-                    hintText={myStrategy.hintText}
-                    onChange={(e) => {
-                      handleStrategyChange(e);
-                      handleStrategyTypeChange("my");
-                    }}
-                    currentStrategy={myStrategy.isCurrentStrategy}
-                    numberOfProducts={myStrategy.numberOfProducts}
-                    checked={selectedStrategy === myStrategy.label}
-                    disabled={activeStep < 1}
-                  />
-                ))}
+            <Stack width="290px" spacing="20px">
+              <Stack direction="row" gap="10px" alignItems="center">
+                <IconRoundBox style={{ background: activeStep < 1 ? "#c4c4c4" : "#009c34" }}>
+                  <PointedLightbulbIcon />
+                </IconRoundBox>
+                <HeadingPrimary style={{ color: activeStep < 1 ? "#c4c4c4" : "#009c34" }}>My Strategies</HeadingPrimary>
               </Stack>
-            </MyStrategiesContainer>
+
+              {myStrategies.map((myStrategy, index) => (
+                <ExpandableStrategyItem
+                  key={index}
+                  clamp
+                  value={myStrategy.label}
+                  label={myStrategy.label}
+                  hintText={myStrategy.hintText}
+                  children={myStrategy.children}
+                  isContentWithin={myStrategy.children}
+                  onChange={(e) => {
+                    handleStrategyChange(e);
+                    handleStrategyTypeChange("my");
+                  }}
+                  currentStrategy={myStrategy.isCurrentStrategy}
+                  numberOfProducts={myStrategy.numberOfProducts}
+                  checked={selectedStrategy === myStrategy.label}
+                  disabled={activeStep < 1}
+                />
+              ))}
+            </Stack>
           </Column>
 
           <DividerWrapper style={{ alignSelf: "stretch" }}>
@@ -342,6 +355,8 @@ const FastStrategy = ({ open, onClose }) => {
                     value={strategy.label}
                     label={strategy.label}
                     hintText={strategy.hintText}
+                    children={strategy.children}
+                    isContentWithin={strategy.children}
                     onChange={(e) => {
                       handleStrategyChange(e);
                       handleStrategyTypeChange("ai");
@@ -366,6 +381,8 @@ const FastStrategy = ({ open, onClose }) => {
                     key={index}
                     value={strategy.label}
                     label={strategy.label}
+                    children={strategy.children}
+                    isContentWithin={strategy.children}
                     onChange={(e) => {
                       handleStrategyChange(e);
                       handleStrategyTypeChange("custom");
@@ -400,7 +417,8 @@ const FastStrategy = ({ open, onClose }) => {
                   hintText={type.hintText}
                   labelDescription={type.labelDescription}
                   children={type.children}
-                  onClick={handleMinMaxTypeChange}
+                  isContentWithin={type.children}
+                  onChange={handleMinMaxTypeChange}
                   checked={minMaxType === type.label}
                   disabled={activeStep < 3}
                 />

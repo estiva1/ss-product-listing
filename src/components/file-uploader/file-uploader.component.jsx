@@ -81,9 +81,9 @@ const FileUploader = () => {
         </StyledUploadContainer>
       </GlowingBox>
 
-      {status === "uploaded" ? (
+      {status === "uploaded" && (
         <TableForUploadedFile style={{ marginTop: "16px" }} fileName={fileName} fileStatus="success" />
-      ) : null}
+      )}
     </>
   );
 };

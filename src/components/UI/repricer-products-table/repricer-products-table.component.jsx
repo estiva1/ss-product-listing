@@ -39,6 +39,7 @@ import settingsWhiteIcon from "../../../assets/settings-white-icon.svg";
 import {
   EditButton,
   ItemImage,
+  ItemImageContainer,
   LightTooltip,
   PrimaryText,
   PrimaryTextBold,
@@ -51,6 +52,26 @@ import {
   StyledTableContainer,
   Trophy,
 } from "./repricer-products-table.styles";
+
+const generateHighlightedText = (text, filterValue) => {
+  const lowerText = text.toLowerCase();
+  const lowerFilterValue = filterValue.toLowerCase();
+
+  if (!lowerText.includes(lowerFilterValue)) {
+    return text;
+  }
+
+  const startIndex = lowerText.indexOf(lowerFilterValue);
+  const endIndex = startIndex + lowerFilterValue.length;
+
+  return (
+    <>
+      {text.substring(0, startIndex)}
+      <span style={{ backgroundColor: "#1565D8", color: "#fff" }}>{text.substring(startIndex, endIndex)}</span>
+      {text.substring(endIndex)}
+    </>
+  );
+};
 
 const getOrdinalSuffix = (number) => {
   const positionNumber = Number(number);
@@ -82,11 +103,9 @@ const getMarginDifference = (number) => {
   const marginDifference = number.toFixed(2);
 
   return (
-    <Stack direction="row" spacing="4px" alignItems="end">
+    <Stack direction="row" spacing="4px" alignItems="flex-end">
       <SmallText style={{ color: "#979797" }}>
-        Margin
-        <br />
-        {marginDifference > 0 ? "increased" : marginDifference < 0 ? "decreased" : "not changed"}:
+        {`Margin\n${marginDifference > 0 ? "increased" : marginDifference < 0 ? "decreased" : "not changed"}:`}
       </SmallText>
       <Stack direction="row" alignItems="center">
         <SmallTextBold $difference={marginDifference}>{marginDifference}%</SmallTextBold>
@@ -290,13 +309,22 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-const RepricerProductsTable = ({ data }) => {
+const RepricerProductsTable = ({ data, itemFilter }) => {
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("position");
   const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [isProductEditUnitOpen, setIsProductEditUnitOpen] = useState(false);
+
+  const matchingData = data.filter((item) => {
+    const lowercasedItemFilter = itemFilter.toLowerCase();
+    return (
+      item.product.toLowerCase().includes(lowercasedItemFilter) ||
+      item.sku.toLowerCase().includes(lowercasedItemFilter) ||
+      item.asin.toLowerCase().includes(lowercasedItemFilter)
+    );
+  });
 
   // Since 2020 all major browsers ensure sort stability with Array.prototype.sort().
   // stableSort() brings sort stability to non-modern browsers (notably IE11). If you
@@ -358,7 +386,7 @@ const RepricerProductsTable = ({ data }) => {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = data.map((n) => n.id);
+      const newSelected = matchingData.map((n) => n.id);
       setSelected(newSelected);
       return;
     }
@@ -394,11 +422,15 @@ const RepricerProductsTable = ({ data }) => {
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
   // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - matchingData.length) : 0;
 
   const visibleRows = useMemo(
-    () => stableSort(data, getComparator(order, orderBy)).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
-    [data, order, orderBy, page, rowsPerPage]
+    () =>
+      stableSort(matchingData, getComparator(order, orderBy)).slice(
+        page * rowsPerPage,
+        page * rowsPerPage + rowsPerPage
+      ),
+    [matchingData, order, orderBy, page, rowsPerPage]
   );
 
   const handleEditClick = () => {
@@ -423,7 +455,7 @@ const RepricerProductsTable = ({ data }) => {
             orderBy={orderBy}
             onSelectAllClick={handleSelectAllClick}
             onRequestSort={handleRequestSort}
-            rowCount={data.length}
+            rowCount={matchingData.length}
           />
           <TableBody>
             {visibleRows.map((row, index) => {
@@ -451,41 +483,43 @@ const RepricerProductsTable = ({ data }) => {
                       }}
                     />
                   </StyledTableCell>
-                  <StyledTableCell align="left" component="th" id={labelId} scope="row" padding="none">
+                  <StyledTableCell id={labelId} scope="row" padding="none">
                     <Stack direction="row" spacing="8px" alignItems="center">
-                      <ItemImage src={testProductImage} style={{ width: "30px", height: "30px" }} loading="lazy" />
-                      <Stack direction="column" gap="6px">
+                      <ItemImageContainer>
+                        <ItemImage src={testProductImage} loading="lazy" />
+                      </ItemImageContainer>
+                      <Stack direction="column" gap="6px" width="100px">
                         <Tooltip title={row.product} placement="top">
-                          <PrimaryTextHighlighted $clamp>{row.product}</PrimaryTextHighlighted>
+                          <PrimaryTextHighlighted $clamp>
+                            {generateHighlightedText(row.product, itemFilter)}
+                          </PrimaryTextHighlighted>
                         </Tooltip>
 
                         <Stack direction="column" gap="4px">
                           <Stack direction="row">
-                            <SmallTextBold style={{ color: "#979797", whiteSpace: "nowrap" }}>SKU:&nbsp;</SmallTextBold>
+                            <SmallTextBold style={{ color: "#979797" }}>SKU:&nbsp;</SmallTextBold>
                             <Tooltip title={row.sku} placement="top">
-                              <SmallTextBold $clamp>{row.sku}</SmallTextBold>
+                              <SmallTextBold $clamp>{generateHighlightedText(row.sku, itemFilter)}</SmallTextBold>
                             </Tooltip>
                           </Stack>
 
                           <Stack direction="row">
-                            <SmallTextBold style={{ color: "#979797", whiteSpace: "nowrap" }}>
-                              ASIN:&nbsp;
-                            </SmallTextBold>
+                            <SmallTextBold style={{ color: "#979797" }}>ASIN:&nbsp;</SmallTextBold>
                             <Tooltip title={row.asin} placement="top">
-                              <SmallTextBold $clamp>{row.asin}</SmallTextBold>
+                              <SmallTextBold $clamp>{generateHighlightedText(row.asin, itemFilter)}</SmallTextBold>
                             </Tooltip>
                           </Stack>
                         </Stack>
                       </Stack>
                     </Stack>
                   </StyledTableCell>
-                  <StyledTableCell align="left">
+                  <StyledTableCell>
                     <Stack direction="column" gap="4px">
                       {getOrdinalSuffix(row.position)}
                       {getMarginDifference(row.marginDifference)}
                     </Stack>
                   </StyledTableCell>
-                  <StyledTableCell align="left">
+                  <StyledTableCell>
                     <Stack direction="column" gap="4px">
                       <MulticolorThumbnail status={row.status} $enlarged />
                       <SmallTextBold style={{ color: "#979797" }}>New Product</SmallTextBold>
@@ -494,24 +528,24 @@ const RepricerProductsTable = ({ data }) => {
                   <StyledTableCell>
                     <PrimaryText>{row.inventoryAge}</PrimaryText>
                   </StyledTableCell>
-                  <StyledTableCell align="left">
+                  <StyledTableCell>
                     <PrimaryText>{row.suggestion}</PrimaryText>
                   </StyledTableCell>
-                  <StyledTableCell align="left">
+                  <StyledTableCell>
                     <Stack direction="column" gap="4px">
                       <PrimaryText>${row.unitPrice.toFixed(2)}</PrimaryText>
                       <EditButton onClick={handleProductEditUnitOpen}>Edit</EditButton>
                     </Stack>
                   </StyledTableCell>
-                  <StyledTableCell align="left">
+                  <StyledTableCell>
                     <PrimaryText>{row.avgSalesRank.toFixed(2)}</PrimaryText>
                   </StyledTableCell>
-                  <StyledTableCell align="left">
+                  <StyledTableCell>
                     <LightTooltip title={<QtyInfo />} placement="top" enterDelay={500} leaveDelay={200}>
                       <PrimaryText style={{ cursor: "help" }}>{row.quantity}</PrimaryText>
                     </LightTooltip>
                   </StyledTableCell>
-                  <StyledTableCell align="left">
+                  <StyledTableCell>
                     <Stack direction="column" gap="4px">
                       <PrimaryText>${row.price.toFixed(2)}</PrimaryText>
                       <SmallText style={{ display: "inline-flex", whiteSpace: "nowrap" }}>
@@ -522,11 +556,11 @@ const RepricerProductsTable = ({ data }) => {
                       </SmallText>
                     </Stack>
                   </StyledTableCell>
-                  <StyledTableCell align="left">
+                  <StyledTableCell>
                     <HintThumbnail value={`$${row.profit.toFixed(2)}`} hintText="Some hint text" />
                     <PrimaryText></PrimaryText>
                   </StyledTableCell>
-                  <StyledTableCell align="left">
+                  <StyledTableCell>
                     <Stack direction="row" gap="8px" alignItems="center">
                       {row.repricingMethod === "Custom" ? (
                         <PrimaryTextHighlighted>{row.repricingMethod}</PrimaryTextHighlighted>
@@ -552,10 +586,10 @@ const RepricerProductsTable = ({ data }) => {
                       </IconButton>
                     </Stack>
                   </StyledTableCell>
-                  <StyledTableCell align="left">
+                  <StyledTableCell>
                     <RegularSwitch checked={row.repricing} />
                   </StyledTableCell>
-                  <StyledTableCell align="left">
+                  <StyledTableCell>
                     <Stack direction="column" gap="10px" alignItems="center">
                       <IconButtonStretched
                         type="button"
@@ -592,7 +626,7 @@ const RepricerProductsTable = ({ data }) => {
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={data.length}
+        count={matchingData.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}

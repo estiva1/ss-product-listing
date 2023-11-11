@@ -1,8 +1,7 @@
 import styled, { css } from "styled-components";
-import { styled as mStyled } from "@mui/material/styles";
 import { TableCell, TableContainer, Tooltip, tableCellClasses, tooltipClasses } from "@mui/material";
 
-export const StyledTableContainer = mStyled(TableContainer)(() => ({
+export const StyledTableContainer = styled(TableContainer)(() => ({
   "&::-webkit-scrollbar": {
     height: " 0.5em",
   },
@@ -20,7 +19,7 @@ export const StyledTableContainer = mStyled(TableContainer)(() => ({
   },
 }));
 
-export const StyledTableCell = mStyled(TableCell)(() => ({
+export const StyledTableCell = styled(TableCell)(() => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: "#F8FAFB",
     border: "none",
@@ -33,7 +32,8 @@ export const StyledTableCell = mStyled(TableCell)(() => ({
     lineHeight: "1rem",
     letterSpacing: "0.00375rem",
     padding: "7px 20px 7px 0px",
-    "&:first-of-type": {
+    //instead of :first-child because it's unsafe when doing SSR
+    "&:nth-of-type(1)": {
       // checkboxes padding is 9px
       paddingLeft: "11px",
       paddingRight: "3px",
@@ -60,7 +60,8 @@ export const StyledTableCell = mStyled(TableCell)(() => ({
     fontFamily: "Titillium Web",
     height: "70px", // minHeight is 67px
     padding: "7px 20px 7px 0px",
-    "&:first-of-type": {
+    //instead of :first-child because it's unsafe when doing SSR
+    "&:nth-of-type(1)": {
       // checkboxes padding is 9px
       paddingLeft: "11px",
       paddingRight: "3px",
@@ -68,19 +69,31 @@ export const StyledTableCell = mStyled(TableCell)(() => ({
   },
 }));
 
+export const ItemImageContainer = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+`;
+
 export const ItemImage = styled.img`
-  width: 100%;
+  width: auto;
+  max-width: 100%;
   height: auto;
-  aspect-ratio: attr(width) / attr(height);
+  max-height: 100%;
 `;
 
 const applyClampStyles = (props) => {
   if (props.$clamp) {
     return css`
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 1;
+      text-overflow: ellipsis;
       overflow: hidden;
+      white-space: nowrap;
+      -webkit-line-clamp: 1;
     `;
   }
   return "";
@@ -115,12 +128,14 @@ export const SecondaryText = styled.h4`
 `;
 
 export const SmallText = styled.h4`
+  width: max-content;
   color: ${({ $difference }) => ($difference > 0 ? "#009C34" : $difference < 0 ? "#CF0909" : "#4e5969")};
   font-size: 0.625rem;
   font-style: normal;
   font-weight: 400;
   line-height: 0.625rem;
   margin: 0;
+  white-space: pre-wrap;
 
   ${applyClampStyles}
 `;
