@@ -1,11 +1,7 @@
 import styled, { css } from "styled-components";
 import { Button, Divider, FormLabel } from "@mui/material";
 
-const dividerMinWidth = "10px";
 const rowPadding = 20;
-const rowWidth = 290;
-
-const dividerWidth = `calc((100% - (${rowWidth}px * 4) - (${rowPadding}px * 2)) / 3)`;
 
 export const FastStrategyContent = styled.div`
   position: relative;
@@ -38,15 +34,11 @@ export const StickersRow = styled.div`
     height: 180px;
     background-color: #e8f0ff;
     width: ${(props) =>
-      props.activeStep === 1
-        ? `calc(${rowWidth}px * ${props.activeStep} + (${dividerWidth} * ${props.activeStep}) / 2 + ${rowPadding}px + 1px)`
-        : props.activeStep === 2
-        ? `calc(${rowWidth}px * ${props.activeStep} + (${dividerWidth} * 1.5 * ${props.activeStep}) / 2 + ${rowPadding}px + 1px)`
+      props.activeStep === 2
+        ? "50%"
         : props.activeStep === 3
-        ? `calc(${rowWidth}px * ${props.activeStep} + (${dividerWidth} * 1.66 * ${props.activeStep}) / 2 + ${rowPadding}px + 1px)`
-        : props.activeStep === 4
-        ? "100%"
-        : 0};
+        ? `calc(75%)`
+        : "100%"};
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
     transition: width ease-in-out 0.5s;
@@ -66,19 +58,11 @@ export const ContentRow = styled.div`
     content: "";
     background-color: #f8fafb;
     width: ${(props) =>
-      props.activeStep === 1
-        ? `calc(${rowWidth}px * ${4 - props.activeStep} + (${dividerWidth} * 1.66 * ${
-            4 - props.activeStep
-          }) / 2 + ${rowPadding}px)`
-        : props.activeStep === 2
-        ? `calc(${rowWidth}px * ${props.activeStep} + (${dividerWidth} * 1.5 * ${props.activeStep}) / 2 + ${rowPadding}px - 1px) `
+      props.activeStep === 2
+        ? "50%"
         : props.activeStep === 3
-        ? `calc(${rowWidth}px * ${4 - props.activeStep} + (${dividerWidth} * ${
-            4 - props.activeStep
-          }) / 2 + ${rowPadding}px)`
-        : props.activeStep === 4
-        ? 0
-        : "100%"};
+        ? `calc(25%)`
+        : 0};
     height: 100%;
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
@@ -90,20 +74,29 @@ export const Column = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
+  min-width: 290px;
+  width: 100%;
+  max-width: 400px;
   justify-content: center;
   align-items: center;
   z-index: 10;
 `;
 
 export const DividerWrapper = styled.span`
-  min-width: ${dividerMinWidth};
+  min-width: 40px;
+  width: 100%;
+  max-width: calc(((100% - 1600px) / 3) - ((((100% - 1600px)) * 1.008) - ((100% - 1600px))));
   display: flex;
-  flex: 1;
+  //flex: 1;
   min-height: 100%;
   align-items: center;
   justify-content: center;
   padding: 0px 4px;
   z-index: 10;
+
+  @media screen and (max-width: 1760px) {
+    max-width: calc((100% - 400px * 4) / 3);
+  }
 `;
 
 export const StyledDivider = styled(Divider)`

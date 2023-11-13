@@ -3,15 +3,17 @@ import Chip from "@mui/material/Chip";
 
 export const StrategyStickerContainer = styled.div`
   display: flex;
+  flex: 1;
   flex-direction: column;
   align-items: center;
+  min-width: 290px;
   width: 100%;
-  max-width: 290px;
+  max-width: 400px;
   z-index: 50;
 `;
 
 export const TextContainer = styled.div`
-  width: 290px;
+  width: 100%;
   height: 90px;
   padding: 20px;
   flex-shrink: 0;
@@ -46,6 +48,7 @@ export const StyledChip = styled(Chip)`
     border-top-left-radius: 16px;
     border-top-right-radius: 16px;
     min-width: 140px;
+    width: 50%;
     background-color: ${(props) => props.backgroundColor};
     transition: all ease-in-out 0.5s
   }
