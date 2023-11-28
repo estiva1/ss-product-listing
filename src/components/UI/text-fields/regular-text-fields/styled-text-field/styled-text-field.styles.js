@@ -12,5 +12,6 @@ export const CustomTextField = styled(TextField)`
     font-style: normal;
     font-weight: 600;
     align-self: center;
+    background-color: #fff;
   }
 `;

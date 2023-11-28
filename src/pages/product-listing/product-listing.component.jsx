@@ -229,7 +229,7 @@ const ProductListing = () => {
             <IconButton sx={{ p: 0 }} disableRipple disableTouchRipple onClick={handleCreateNewStrategyOpen}>
               <ButtonIconOne />
             </IconButton>
-            <IconButton sx={{ p: 0 }} disableRipple disableTouchRipple onClick={handleFastStrategyAdjustmentOpen}>
+            <IconButton sx={{ p: 0 }} disableRipple disableTouchRipple>
               <ButtonIconTwo />
             </IconButton>
           </Stack>
@@ -311,7 +311,7 @@ const ProductListing = () => {
         </Stack>
       </StyledPopover>
 
-      <RepricerProductsTable data={repricerProductsTableData} itemFilter={deferredItemFilter} />
+      <RepricerProductsTable data={repricerProductsTableData} itemFilter={deferredItemFilter} onChangeStrategyButtonClick={handleFastStrategyAdjustmentOpen}/>
       <PriceSection open={isPriceSectionOpen} onClose={handlePriceSectionClose} />
       <ProfitOverlay open={isProfitOverlayOpen} onClose={handleProfitOverlayClose} />
       <CreateNewStrategy open={isCreateNewStrategyOpen} onClose={handleCreateNewStrategyClose} />

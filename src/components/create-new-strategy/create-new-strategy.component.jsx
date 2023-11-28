@@ -8,9 +8,9 @@ import KeyboardBackspaceRoundedIcon from "@mui/icons-material/KeyboardBackspaceR
 
 import InfoBar from "../UI/hints/info-bar/info-bar.component";
 import HintBar from "../UI/hints/hint-bar/hint-bar.component";
-import CustomAccordion from "../UI/accordion/accordion.component";
 import TemporaryDrawer from "../UI/top-drawer/top-drawer.component";
 import Dropdown from "../UI/dropdowns/simple-dropdown/dropdown.component";
+import CustomAccordion from "../UI/accordions/accordion/accordion.component";
 import RegularSwitch from "../UI/switches/regular-switch/regular-switch.component";
 import StyledTextField from "../UI/text-fields/regular-text-fields/styled-text-field/styled-text-field.component";
 import RegularStrategyButton from "../UI/buttons/select-strategy-buttons/select-strategy-btn-regular/select-strategy-btn-regular.component";

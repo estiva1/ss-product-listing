@@ -309,7 +309,7 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-const RepricerProductsTable = ({ data, itemFilter }) => {
+const RepricerProductsTable = ({ data, itemFilter, onChangeStrategyButtonClick }) => {
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("position");
   const [selected, setSelected] = useState([]);
@@ -596,6 +596,7 @@ const RepricerProductsTable = ({ data, itemFilter }) => {
                         buttonType={BUTTON_TYPE_CLASSES.blueFilled}
                         buttonText="Change Strategy"
                         buttonImage={settingsWhiteIcon}
+                        onClick={onChangeStrategyButtonClick}
                       >
                         <Ripple />
                       </IconButtonStretched>

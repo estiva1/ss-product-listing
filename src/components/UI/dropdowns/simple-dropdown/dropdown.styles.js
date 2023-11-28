@@ -8,6 +8,7 @@ export const StyledAutocomplete = styled(Autocomplete)`
     font-size: 0.75rem;
     font-style: normal;
     font-weight: 600;
+    background-color: #fff;
   }
 
   .MuiFormLabel-root {

@@ -1,12 +1,18 @@
 import React, { useState } from "react";
 
-import { styled } from "@mui/material/styles";
 import { Stack } from "@mui/material";
 import Radio from "@mui/material/Radio";
+import { styled } from "@mui/material/styles";
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
 import MuiAccordionSummary from "@mui/material/AccordionSummary";
 
+import IconButtonStretched, {
+  BUTTON_TYPE_CLASSES,
+  Ripple,
+} from "../buttons/icon-button-stretched/icon-button-stretched.component";
+
 import {
+  AiIcon,
   Description,
   DescriptionHighlighted,
   HintCircleContainer,
@@ -14,8 +20,11 @@ import {
   HintTextContainer,
   Label,
   LightBulbIcon,
+  StrategyItemContainer,
   StyledAccordion,
 } from "./expandable-strategy-item.styles";
+
+import settingsBlueIcon from "../../../assets/settings-blue-icon.svg";
 
 const BpIcon = styled("span")(() => ({
   borderRadius: "50%",
@@ -58,67 +67,99 @@ const BpCheckedIcon = styled(BpIcon)({
 });
 
 const ExpandableStrategyItem = ({
+  clamp,
   label = "",
   labelDescription = "",
   hintText = "No additional info available.",
-  clamp,
+  aiStrategy,
+  strategyType,
   currentStrategy,
   numberOfProducts = 0,
-  disabled,
-  children,
   isContentWithin,
+  disableEdit,
+  onEditStrategyButtonClick,
+  children,
   ...props
 }) => {
   const [accordionExpanded, setAccordionExpanded] = useState(false);
   const [hintExpanded, setHintExpanded] = useState(false);
 
   const toggleAcordion = () => {
-    !disabled && setAccordionExpanded((prev) => !prev);
+    setAccordionExpanded((prev) => !prev);
   };
   const toggleHint = () => {
-    !disabled && setHintExpanded((prev) => !prev);
+    setHintExpanded((prev) => !prev);
   };
 
   const handleClick = (e) => {
     e.stopPropagation();
   };
   return (
-    <Stack>
-      <Stack width="100%" direction="row" alignItems="center" justifyContent="space-between">
+    <StrategyItemContainer color={strategyType}>
+      <Stack direction="row" alignItems="center" alignSelf="stretch" justifyContent="space-between">
         <Stack
-          sx={{ cursor: disabled ? "arrow" : "pointer", mt: "2px", mb: "2px" }}
+          sx={{ cursor: "pointer", mt: "2px", mb: "2px" }}
           direction="row"
           alignItems="center"
           gap="14px"
           onClick={toggleAcordion}
         >
           <Radio
-            sx={{ p: 0, ml: "4px" }}
+            sx={{ p: 0 }}
             disableRipple
             color="default"
             checkedIcon={<BpCheckedIcon />}
             icon={<BpIcon />}
             onClick={handleClick}
-            disabled={disabled}
             {...props}
           />
-          <Stack maxWidth="200px" direction="row" alignItems="baseline" gap="10px">
-            <Label clamp={clamp} disabled={disabled}>
-              {label}
-            </Label>
+          <Stack direction="row" alignItems="baseline" gap="10px">
+            <Stack maxWidth="172px" direction="row" alignItems="center" gap="6px">
+              <AiIcon style={{ display: aiStrategy ? "block" : "none" }} />
+              <Label clamp={clamp} currentStrategy={currentStrategy} aiStrategy={aiStrategy}>
+                {label}
+              </Label>
+            </Stack>
             <Description style={{ color: "#4E5969", letterSpacing: "0.00375rem" }}>{labelDescription}</Description>
           </Stack>
         </Stack>
 
-        <HintCircleContainer disabled={disabled} hintExpanded={hintExpanded} onClick={toggleHint}>
-          <LightBulbIcon disabled={disabled} />
-        </HintCircleContainer>
+        <Stack direction="row" alignItems="center" gap="8px">
+          {disableEdit ? (
+            <Description
+              style={{
+                color: "#f90",
+                whiteSpace: "pre-wrap",
+                textAlign: "right",
+                fontWeight: "400",
+                lineHeight: "0.75rem",
+              }}
+            >
+              {`See\nmore`}
+            </Description>
+          ) : (
+            <IconButtonStretched
+              type="button"
+              buttonType={BUTTON_TYPE_CLASSES.transparentBlue}
+              buttonText="Edit"
+              buttonImage={settingsBlueIcon}
+              bold
+              onClick={onEditStrategyButtonClick}
+            >
+              <Ripple color="#1565d8" />
+            </IconButtonStretched>
+          )}
+
+          <HintCircleContainer hintExpanded={hintExpanded} onClick={toggleHint}>
+            <LightBulbIcon />
+          </HintCircleContainer>
+        </Stack>
       </Stack>
 
       <StyledAccordion expanded={hintExpanded} disableGutters elevation={0} square>
         <MuiAccordionSummary></MuiAccordionSummary>
         <MuiAccordionDetails>
-          <HintTextContainer disabled={disabled}>
+          <HintTextContainer>
             <HintText>{hintText}</HintText>
           </HintTextContainer>
         </MuiAccordionDetails>
@@ -139,7 +180,7 @@ const ExpandableStrategyItem = ({
           {`This strategy is assigned to ${numberOfProducts} ${numberOfProducts > 1 ? "products" : "product"}`}
         </DescriptionHighlighted>
       </Stack>
-    </Stack>
+    </StrategyItemContainer>
   );
 };
 

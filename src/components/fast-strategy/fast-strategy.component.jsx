@@ -1,48 +1,49 @@
 import React, { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 
-import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
-import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
-import { Alert, Box, Divider, InputAdornment, Snackbar, Stack } from "@mui/material";
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+import { Box, Container, Divider, IconButton, InputAdornment, Stack } from "@mui/material";
 
 import InfoBar from "../UI/hints/info-bar/info-bar.component";
-import CustomAccordion from "../UI/accordion/accordion.component";
+import CustomAccordion from "../UI/accordions/accordion/accordion.component";
 import TemporaryDrawer from "../UI/top-drawer/top-drawer.component";
 import Dropdown from "../UI/dropdowns/simple-dropdown/dropdown.component";
-import StrategySticker from "../UI/strategy-sticker/strategy-sticker.component";
+import IconButtonStretched, {
+  BUTTON_TYPE_CLASSES,
+  Ripple,
+} from "../UI/buttons/icon-button-stretched/icon-button-stretched.component";
 import RegularSwitch from "../UI/switches/regular-switch/regular-switch.component";
+import MyStrategyInfo from "../UI/hints/my-strategy-info/my-strategy-info.component";
+import ParentAccordion from "../UI/accordions/parent-accordion/parent-accordion.component";
 import ExpandableStrategyItem from "../UI/expandable-strategy-item/expandable-strategy-item.component";
 import StyledTextField from "../UI/text-fields/regular-text-fields/styled-text-field/styled-text-field.component";
 
 import SaveStrategyModal from "../save-strategy-modal/save-strategy-modal.component";
 import ApplyStrategyModal from "../apply-strategy-modal/apply-strategy-modal.component";
 
+import deleteIcon from "../../assets/delete-icon.svg";
+
 import {
+  BoldDivider,
   Column,
-  ContentRow,
-  DividerWrapper,
   FastStrategyContent,
-  FastStrategyNavigation,
+  FastStrategyHeader,
+  HeaderBox,
   HeadingPrimary,
   IconRoundBox,
   Label,
+  Legend,
+  LegendPoint,
+  LegendPointText,
+  MainContainer,
   PointedLightbulbIcon,
   RuleRow,
   SpinningGearIcon,
-  StickersRow,
-  StyledButton,
-  StyledDivider,
-  TechnologyIcon,
+  Strategies,
+  StrategyCaption,
+  StyledButtonBlue,
+  StyledButtonWhite,
 } from "./fast-strategy.styles";
-
-const AlertBar = ({ open, onClose }) => {
-  return (
-    <Snackbar open={open} autoHideDuration={6000} onClose={onClose}>
-      <Alert onClose={onClose} severity="error" sx={{ width: "100%" }}>
-        Hey, you forget to apply some rules to your strategy!
-      </Alert>
-    </Snackbar>
-  );
-};
 
 const MinMaxTypeAutoContent = () => {
   return (
@@ -88,26 +89,21 @@ const NoContent = () => {
 };
 
 const FastStrategy = ({ open, onClose }) => {
-  const [activeStep, setActiveStep] = useState(2);
+  const [flow, setFlow] = useState("change");
+
   const [activeStrategy, setActiveStrategy] = useState("");
   const [selectedStrategy, setSelectedStrategy] = useState("");
-  const [strategyType, setStrategyType] = useState("");
+  const [numberOfSkus, setNumberOfSkus] = useState("");
+  const [strategyType, setStrategyType] = useState("my");
   const [minMaxType, setMinMaxType] = useState("");
 
   const currenciesData = ["$", "€", "฿", "¥"];
   const dropdownsData = ["Option 1", "Option 2", "Option 3"];
   const [currency, setCurrency] = useState("$");
 
-  const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [isSaveStrategyModalOpen, setIsSaveStrategyModalOpen] = useState(false);
   const [isApplyStrategyModalOpen, setIsApplyStrategyModalOpen] = useState(false);
 
-  const handleAlertOpen = () => {
-    setIsAlertOpen(true);
-  };
-  const handleAlertClose = () => {
-    setIsAlertOpen(false);
-  };
   const handleSaveStrategyModalOpen = () => {
     setIsSaveStrategyModalOpen(true);
   };
@@ -121,45 +117,30 @@ const FastStrategy = ({ open, onClose }) => {
     setIsApplyStrategyModalOpen(false);
   };
 
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  const handleSaveClick = () => {
+    flow === "change" ? handleApplyStrategyModalOpen() : handleSaveStrategyModalOpen();
   };
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-  const handleAssign = () => {
-    if (strategyType === "my") handleApplyStrategyModalOpen();
-    else if ((strategyType === "ai" || strategyType === "custom") && minMaxType) handleSaveStrategyModalOpen();
-    else handleAlertOpen();
-  };
+
   const handleReset = () => {
-    setActiveStep(2);
     setSelectedStrategy("");
     setStrategyType("");
     setMinMaxType("");
   };
 
+  const handleFlowChange = (newFlow) => {
+    setFlow(newFlow);
+  };
   const handleStrategyChange = (event) => {
     setSelectedStrategy(event.target.value);
   };
+  const handleNumberOfSkusChange = (n) => {
+    setNumberOfSkus(n);
+  };
   const handleMinMaxTypeChange = (event) => {
     setMinMaxType(event.target.value);
-
-    !minMaxType && handleNext();
   };
   const handleStrategyTypeChange = (type) => {
     setStrategyType(type);
-
-    switch (strategyType) {
-      case "ai":
-      case "custom":
-        if (type === "my") handleBack();
-        if (type === "my" && minMaxType) setActiveStep(2);
-        break;
-      default:
-        if (type === "ai" || type === "custom") handleNext();
-        if ((type === "ai" || type === "custom") && minMaxType) setActiveStep(4);
-    }
   };
 
   const myStrategies = [
@@ -168,22 +149,41 @@ const FastStrategy = ({ open, onClose }) => {
       hintText:
         "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet.",
       isCurrentStrategy: true,
+      strategyType: "built-in",
       numberOfProducts: 33,
+      numberOfSkus: 1,
       children: null,
     },
     {
-      label: "Strategy 1",
+      label: "Built-In 1",
       isCurrentStrategy: false,
+      strategyType: "built-in",
+      numberOfProducts: 1,
+      numberOfSkus: 2,
       children: null,
     },
     {
-      label: "abc",
+      label: "Built-In 2",
       isCurrentStrategy: false,
+      strategyType: "built-in",
+      numberOfProducts: 33,
+      numberOfSkus: 33,
       children: null,
     },
     {
       label: "winORlose",
       isCurrentStrategy: false,
+      strategyType: "user-created",
+      numberOfProducts: 33,
+      numberOfSkus: 65,
+      children: null,
+    },
+    {
+      label: "this is veeeeeery loooooong strategy name",
+      isCurrentStrategy: false,
+      strategyType: "user-created",
+      numberOfProducts: 33,
+      numberOfSkus: 33,
       children: null,
     },
   ];
@@ -191,12 +191,14 @@ const FastStrategy = ({ open, onClose }) => {
   const predefinedStrategies = [
     {
       label: "MadMax",
+      isAi: true,
       hintText:
         "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet.",
       children: <NoContent />,
     },
     {
       label: "Slow and Steady",
+      isAi: true,
       hintText:
         "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet.",
       children: null,
@@ -251,71 +253,45 @@ const FastStrategy = ({ open, onClose }) => {
     if (strategy) {
       setActiveStrategy(strategy.label);
       setSelectedStrategy(strategy.label);
+      setNumberOfSkus(strategy.numberOfSkus);
     }
   }, []);
 
   return (
-    <TemporaryDrawer open={open} onClose={onClose}>
-      <div style={{ minWidth: "1360px" }}>
+    <TemporaryDrawer hideBottomBorder open={open} onClose={onClose}>
+      <MainContainer>
+        <IconButton
+          //disableRipple
+          sx={{ position: "absolute", top: "0px", right: "0px" }}
+          aria-label="close"
+          onClick={onClose}
+        >
+          <CloseRoundedIcon sx={{ color: "#fff" }} />
+        </IconButton>
+        <HeaderBox style={{ marginBottom: "40px" }}>
+          <FastStrategyHeader>Change or Create a New Strategy</FastStrategyHeader>
+        </HeaderBox>
+
         <FastStrategyContent>
-          <StickersRow activeStep={activeStep}>
-            <Column>
-              <StrategySticker
-                label="Your Strategies"
-                text={`Change your own Strategies\nor create a New One`}
-                color="#80CD9A"
-                disabled={activeStep < 1}
-              />
-            </Column>
+          <Column>
+            <Container disableGutters>
+              <Box marginBottom="20px" component="main">
+                <Stack spacing="24px" alignItems="center">
+                  <Stack>
+                    <Stack direction="row" gap="10px" alignItems="center" justifyContent="center" marginBottom="16px">
+                      <IconRoundBox style={{ background: "#009c34" }}>
+                        <PointedLightbulbIcon />
+                      </IconRoundBox>
+                      <HeadingPrimary style={{ color: "#009c34" }}>Change Strategies</HeadingPrimary>
+                    </Stack>
+                    <StrategyCaption>Change your Strategies</StrategyCaption>
+                  </Stack>
 
-            <DividerWrapper>
-              <StyledDivider sx={{ width: "100%", mt: "20px" }}>OR</StyledDivider>
-            </DividerWrapper>
-
-            <Column>
-              <StrategySticker
-                label="Types of Strategies"
-                text="Pick the type of Strategy"
-                color="#7CCFFD"
-                disabled={activeStep < 2}
-              />
-            </Column>
-
-            <DividerWrapper />
-
-            <Column>
-              <StrategySticker
-                label="Price Settings"
-                text="Adjust the price rules for a Strategy"
-                color="#F9C87A"
-                disabled={activeStep < 3}
-              />
-            </Column>
-
-            <DividerWrapper />
-
-            <Column>
-              <StrategySticker
-                label="Your Strategies"
-                text={`Choose your repricing rules of competing\nagainst other sellers on the marketplace.`}
-                color="#6A98D8"
-                disabled={activeStep < 4}
-              />
-            </Column>
-          </StickersRow>
-
-          <ContentRow activeStep={activeStep}>
-            <Column>
-              <Stack minWidth="290px" spacing="20px">
-                <Stack direction="row" gap="10px" alignItems="center">
-                  <IconRoundBox style={{ background: activeStep < 1 ? "#c4c4c4" : "#009c34" }}>
-                    <PointedLightbulbIcon />
-                  </IconRoundBox>
-                  <HeadingPrimary style={{ color: activeStep < 1 ? "#c4c4c4" : "#009c34" }}>
-                    My Strategies
-                  </HeadingPrimary>
+                  <BoldDivider />
                 </Stack>
+              </Box>
 
+              <Strategies style={{ marginBottom: "32px" }}>
                 {myStrategies.map((myStrategy, index) => (
                   <ExpandableStrategyItem
                     key={index}
@@ -328,433 +304,455 @@ const FastStrategy = ({ open, onClose }) => {
                     onChange={(e) => {
                       handleStrategyChange(e);
                       handleStrategyTypeChange("my");
+                      handleNumberOfSkusChange(myStrategy.numberOfSkus);
                     }}
                     currentStrategy={myStrategy.isCurrentStrategy}
+                    strategyType={myStrategy.strategyType === "built-in" ? "#E5F6FF" : "#DFF1E7"}
                     numberOfProducts={myStrategy.numberOfProducts}
                     checked={selectedStrategy === myStrategy.label}
-                    disabled={activeStep < 1}
+                    onEditStrategyButtonClick={() => handleFlowChange("edit")}
                   />
                 ))}
-              </Stack>
-            </Column>
+              </Strategies>
 
-            <DividerWrapper style={{ alignSelf: "stretch" }}>
-              <Divider orientation="vertical" flexItem />
-            </DividerWrapper>
+              <Legend>
+                <Stack direction="row" gap="5px" alignItems="center" component="li" padding={0}>
+                  <LegendPoint color="#E5F6FF" />
+                  <LegendPointText>- Built-in Sales.Support Strategies</LegendPointText>
+                </Stack>
 
-            <Column>
-              <Stack minWidth="290px" spacing="32px">
-                <Stack spacing="20px">
-                  <Stack direction="row" gap="10px" alignItems="center">
-                    <IconRoundBox style={{ background: activeStep < 2 ? "#c4c4c4" : "#00A3FF" }}>
-                      <TechnologyIcon />
-                    </IconRoundBox>
-                    <HeadingPrimary style={{ color: activeStep < 2 ? "#c4c4c4" : "#00a3ff" }}>
-                      Ai Powered Strategy
-                    </HeadingPrimary>
+                <Stack direction="row" gap="5px" alignItems="center" component="li" padding={0}>
+                  <LegendPoint color="#DFF1E7" />
+                  <LegendPointText>- User-Created Strategies</LegendPointText>
+                </Stack>
+              </Legend>
+            </Container>
+          </Column>
+
+          <Column>
+            <Container disableGutters>
+              <Box marginBottom="20px" component="main">
+                <Stack spacing="24px" alignItems="center">
+                  <Stack>
+                    <Stack direction="row" gap="10px" alignItems="center" justifyContent="center" marginBottom="16px">
+                      <IconRoundBox style={{ background: "#00A3FF" }}>
+                        <SpinningGearIcon />
+                      </IconRoundBox>
+                      <HeadingPrimary style={{ color: "#00A3FF" }}>Create Strategy</HeadingPrimary>
+                    </Stack>
+                    <StrategyCaption>Pick the type of Strategy</StrategyCaption>
                   </Stack>
-                  {predefinedStrategies.slice(0, 2).map((strategy, index) => (
-                    <ExpandableStrategyItem
-                      key={index}
-                      value={strategy.label}
-                      label={strategy.label}
-                      hintText={strategy.hintText}
-                      children={strategy.children}
-                      isContentWithin={strategy.children}
-                      onChange={(e) => {
-                        handleStrategyChange(e);
-                        handleStrategyTypeChange("ai");
-                      }}
-                      checked={selectedStrategy === strategy.label}
-                      disabled={activeStep < 2}
-                    />
-                  ))}
-                </Stack>
 
-                <Stack spacing="20px">
-                  <Stack direction="row" gap="10px" alignItems="center">
-                    <IconRoundBox style={{ background: activeStep < 2 ? "#c4c4c4" : "#00A3FF" }}>
-                      <PointedLightbulbIcon />
-                    </IconRoundBox>
-                    <HeadingPrimary style={{ color: activeStep < 2 ? "#c4c4c4" : "#00a3ff" }}>
-                      Custom Rules Strategy
-                    </HeadingPrimary>
+                  <BoldDivider />
+                </Stack>
+              </Box>
+
+              {flow === "edit" || strategyType === "new" ? (
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    initial={{ x: 40, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    exit={{ x: -40, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <Box marginBottom="10px">
+                      <IconButtonStretched
+                        type="button"
+                        buttonType={BUTTON_TYPE_CLASSES.whiteRoundedOutlined}
+                        buttonText="Clear Settings"
+                        buttonImage={deleteIcon}
+                        noAnimations
+                        bold
+                      >
+                        <Ripple color="#1565d8" />
+                      </IconButtonStretched>
+                    </Box>
+                  </motion.div>
+                </AnimatePresence>
+              ) : null}
+
+              <Strategies style={{ background: "#00a3ff0d" }}>
+                <ParentAccordion summary="Strategy profile options" label={flow === "edit" ? `Buy Box\nStrategy` : ""}>
+                  <Stack spacing="4px">
+                    {predefinedStrategies.map((strategy, index) => (
+                      <ExpandableStrategyItem
+                        key={index}
+                        value={strategy.label}
+                        label={strategy.label}
+                        aiStrategy={strategy.isAi}
+                        hintText={strategy.hintText}
+                        children={strategy.children}
+                        isContentWithin={strategy.children}
+                        onChange={(e) => {
+                          handleStrategyChange(e);
+                          handleStrategyTypeChange("new");
+                          handleFlowChange("create");
+                        }}
+                        checked={selectedStrategy === strategy.label}
+                        disableEdit
+                      />
+                    ))}
                   </Stack>
-                  {predefinedStrategies.slice(2, 4).map((strategy, index) => (
-                    <ExpandableStrategyItem
-                      key={index}
-                      value={strategy.label}
-                      label={strategy.label}
-                      children={strategy.children}
-                      isContentWithin={strategy.children}
-                      onChange={(e) => {
-                        handleStrategyChange(e);
-                        handleStrategyTypeChange("custom");
-                      }}
-                      checked={selectedStrategy === strategy.label}
-                      disabled={activeStep < 2}
-                    />
-                  ))}
-                </Stack>
-              </Stack>
-            </Column>
+                </ParentAccordion>
 
-            <DividerWrapper style={{ alignSelf: "stretch" }}>
-              <Divider orientation="vertical" flexItem />
-            </DividerWrapper>
+                <Divider sx={{ borderColor: "#00A3FF", marginBlock: "10px" }} flexItem />
 
-            <Column>
-              <Stack minWidth="290px" spacing="20px">
-                <Stack direction="row" gap="10px" alignItems="center">
-                  <IconRoundBox style={{ background: activeStep < 3 ? "#c4c4c4" : "#f90" }}>
-                    <SpinningGearIcon />
-                  </IconRoundBox>
-                  <HeadingPrimary style={{ color: activeStep < 3 ? "#c4c4c4" : "#f90" }}>
-                    Adjust Min/Max Price
-                  </HeadingPrimary>
-                </Stack>
-                {adjustMinMaxPrice.map((type, index) => (
-                  <ExpandableStrategyItem
-                    key={index}
-                    value={type.label}
-                    label={type.label}
-                    hintText={type.hintText}
-                    labelDescription={type.labelDescription}
-                    children={type.children}
-                    isContentWithin={type.children}
-                    onChange={handleMinMaxTypeChange}
-                    checked={minMaxType === type.label}
-                    disabled={activeStep < 3}
-                  />
-                ))}
-              </Stack>
-            </Column>
+                <ParentAccordion summary="Price Settings" label={flow === "edit" ? "ROI" : ""}>
+                  <Stack spacing="4px">
+                    {adjustMinMaxPrice.map((type, index) => (
+                      <ExpandableStrategyItem
+                        key={index}
+                        value={type.label}
+                        label={type.label}
+                        hintText={type.hintText}
+                        labelDescription={type.labelDescription}
+                        children={type.children}
+                        isContentWithin={type.children}
+                        onChange={handleMinMaxTypeChange}
+                        checked={minMaxType === type.label}
+                        disableEdit
+                      />
+                    ))}
+                  </Stack>
+                </ParentAccordion>
 
-            <DividerWrapper style={{ alignSelf: "stretch" }}>
-              <Divider orientation="vertical" flexItem />
-            </DividerWrapper>
+                <Divider sx={{ borderColor: "#00A3FF", marginBlock: "10px" }} flexItem />
 
-            <Column>
-              <Stack minWidth="290px" direction="row" gap="10px" alignItems="center" marginBottom="32px">
-                <IconRoundBox style={{ background: activeStep < 4 ? "#c4c4c4" : "#1565d8" }}>
-                  <SpinningGearIcon />
-                </IconRoundBox>
-                <HeadingPrimary style={{ color: activeStep < 4 ? "#c4c4c4" : "#1565d8" }}>Rules</HeadingPrimary>
-              </Stack>
-              <Stack minWidth="290px" gap="24px">
-                <CustomAccordion summary="Price Rules" disabled={activeStep < 4}>
-                  <div style={{ width: "100%" }}>
-                    <RuleRow>
-                      <Box sx={{ width: "100%" }}>
-                        <Stack spacing="10px">
-                          <Label>How to price against the competition</Label>
-                          <Stack direction="row" spacing="8px" alignItems="center">
+                <ParentAccordion summary="Rule Base" label={flow === "edit" ? `Edit` : ""}>
+                  <Stack gap="24px">
+                    <CustomAccordion summary="Price Rules">
+                      <div style={{ width: "100%" }}>
+                        <RuleRow>
+                          <Box sx={{ width: "100%" }}>
+                            <Stack spacing="10px">
+                              <Label>How to price against the competition</Label>
+                              <Stack direction="row" spacing="8px" alignItems="center">
+                                <Dropdown sx={{ flex: 1 }} data={dropdownsData} placeholder="Choose Option" />
+                                <Label>by</Label>
+                                <Dropdown
+                                  sx={{ width: "55px" }}
+                                  data={currenciesData}
+                                  placeholder=""
+                                  disableClearable
+                                  setSelectedValue={setCurrency}
+                                  value={currency}
+                                />
+                                <StyledTextField
+                                  sx={{ width: "70px" }}
+                                  InputProps={{
+                                    startAdornment: <InputAdornment position="start">{currency}</InputAdornment>,
+                                  }}
+                                />
+                              </Stack>
+                            </Stack>
+                          </Box>
+                        </RuleRow>
+
+                        <RuleRow>
+                          <Box sx={{ width: "100%" }}>
+                            <Stack spacing="10px">
+                              <Stack direction="row" spacing="8px" alignItems="center">
+                                <RegularSwitch />
+                                <Label>Price differently against Amazon</Label>
+                              </Stack>
+                              <Stack direction="row" spacing="8px" alignItems="center">
+                                <Dropdown sx={{ flex: 1 }} data={dropdownsData} placeholder="Choose Option" />
+                                <Label>by</Label>
+                                <Dropdown
+                                  sx={{ width: "55px" }}
+                                  data={currenciesData}
+                                  placeholder=""
+                                  disableClearable
+                                  setSelectedValue={setCurrency}
+                                  value={currency}
+                                />
+                                <StyledTextField
+                                  sx={{ width: "70px" }}
+                                  InputProps={{
+                                    startAdornment: <InputAdornment position="start">{currency}</InputAdornment>,
+                                  }}
+                                />
+                              </Stack>
+                            </Stack>
+                          </Box>
+                        </RuleRow>
+
+                        <RuleRow>
+                          <Box sx={{ width: "100%" }}>
+                            <Stack spacing="10px">
+                              <Stack direction="row" spacing="8px" alignItems="center">
+                                <RegularSwitch />
+                                <Label>Price differently against FBA</Label>
+                              </Stack>
+                              <Stack direction="row" spacing="8px" alignItems="center">
+                                <Dropdown sx={{ flex: 1 }} data={dropdownsData} placeholder="Choose Option" />
+                                <Label>by</Label>
+                                <Dropdown
+                                  sx={{ width: "55px" }}
+                                  data={currenciesData}
+                                  placeholder=""
+                                  disableClearable
+                                  setSelectedValue={setCurrency}
+                                  value={currency}
+                                />
+                                <StyledTextField
+                                  sx={{ width: "70px" }}
+                                  InputProps={{
+                                    startAdornment: <InputAdornment position="start">{currency}</InputAdornment>,
+                                  }}
+                                />
+                              </Stack>
+                            </Stack>
+                          </Box>
+                        </RuleRow>
+
+                        <RuleRow>
+                          <Box sx={{ width: "100%" }}>
+                            <Stack spacing="10px">
+                              <Stack direction="row" spacing="8px" alignItems="center">
+                                <RegularSwitch />
+                                <Label>Price differently against FBM</Label>
+                              </Stack>
+                              <Stack direction="row" spacing="8px" alignItems="center">
+                                <Dropdown sx={{ flex: 1 }} data={dropdownsData} placeholder="Choose Option" />
+                                <Label>by</Label>
+                                <Dropdown
+                                  sx={{ width: "55px" }}
+                                  data={currenciesData}
+                                  placeholder=""
+                                  disableClearable
+                                  setSelectedValue={setCurrency}
+                                  value={currency}
+                                />
+                                <StyledTextField
+                                  sx={{ width: "70px" }}
+                                  InputProps={{
+                                    startAdornment: <InputAdornment position="start">{currency}</InputAdornment>,
+                                  }}
+                                />
+                              </Stack>
+                            </Stack>
+                          </Box>
+                        </RuleRow>
+                      </div>
+                    </CustomAccordion>
+
+                    <CustomAccordion summary="Competition Rules">
+                      <RuleRow>
+                        <Box sx={{ width: "100%" }}>
+                          <Stack spacing="10px">
+                            <Label>When there is no competition</Label>
                             <Dropdown sx={{ flex: 1 }} data={dropdownsData} placeholder="Choose Option" />
-                            <Label>by</Label>
-                            <Dropdown
-                              sx={{ width: "55px" }}
-                              data={currenciesData}
-                              placeholder=""
-                              disableClearable
-                              setSelectedValue={setCurrency}
-                              value={currency}
-                            />
-                            <StyledTextField
-                              sx={{ width: "70px" }}
-                              InputProps={{
-                                startAdornment: <InputAdornment position="start">{currency}</InputAdornment>,
-                              }}
-                            />
+                            <Stack direction="row" spacing="8px" alignItems="center">
+                              <Label>Set to</Label>
+                              <Dropdown
+                                sx={{ flex: 1, marginLeft: "10px !important" }}
+                                data={dropdownsData}
+                                placeholder="Choose Option"
+                              />
+                              <Label>by</Label>
+                              <Dropdown
+                                sx={{ width: "55px" }}
+                                data={currenciesData}
+                                placeholder=""
+                                disableClearable
+                                setSelectedValue={setCurrency}
+                                value={currency}
+                              />
+                              <StyledTextField
+                                sx={{ width: "70px" }}
+                                InputProps={{
+                                  startAdornment: <InputAdornment position="start">{currency}</InputAdornment>,
+                                }}
+                              />
+                            </Stack>
                           </Stack>
-                        </Stack>
-                      </Box>
-                    </RuleRow>
+                        </Box>
+                      </RuleRow>
 
-                    <RuleRow>
-                      <Box sx={{ width: "100%" }}>
-                        <Stack spacing="10px">
-                          <Stack direction="row" spacing="8px" alignItems="center">
+                      <RuleRow>
+                        <Box sx={{ width: "100%" }}>
+                          <Stack spacing="10px">
+                            <Label>When the competition is Below your minimum price</Label>
+                            <Dropdown sx={{ flex: 1 }} data={dropdownsData} placeholder="Choose Option" />
+                            <Stack direction="row" spacing="8px" alignItems="center">
+                              <Label>Set to</Label>
+                              <Dropdown
+                                sx={{ flex: 1, marginLeft: "10px !important" }}
+                                data={dropdownsData}
+                                placeholder="Choose Option"
+                              />
+                              <Label>by</Label>
+                              <Dropdown
+                                sx={{ width: "55px" }}
+                                data={currenciesData}
+                                placeholder=""
+                                disableClearable
+                                setSelectedValue={setCurrency}
+                                value={currency}
+                              />
+                              <StyledTextField
+                                sx={{ width: "70px" }}
+                                InputProps={{
+                                  startAdornment: <InputAdornment position="start">{currency}</InputAdornment>,
+                                }}
+                              />
+                            </Stack>
+                          </Stack>
+                        </Box>
+                      </RuleRow>
+
+                      <RuleRow>
+                        <Box sx={{ width: "100%" }}>
+                          <Stack spacing="10px">
+                            <Label>When the competition is Above your maximum price</Label>
+                            <Dropdown sx={{ flex: 1 }} data={dropdownsData} placeholder="Choose Option" />
+                            <Stack direction="row" spacing="8px" alignItems="center">
+                              <Label>Set to</Label>
+                              <Dropdown
+                                sx={{ flex: 1, marginLeft: "10px !important" }}
+                                data={dropdownsData}
+                                placeholder="Choose Option"
+                              />
+                              <Label>by</Label>
+                              <Dropdown
+                                sx={{ width: "55px" }}
+                                data={currenciesData}
+                                placeholder=""
+                                disableClearable
+                                setSelectedValue={setCurrency}
+                                value={currency}
+                              />
+                              <StyledTextField
+                                sx={{ width: "70px" }}
+                                InputProps={{
+                                  startAdornment: <InputAdornment position="start">{currency}</InputAdornment>,
+                                }}
+                              />
+                            </Stack>
+                          </Stack>
+                        </Box>
+                      </RuleRow>
+
+                      <RuleRow>
+                        <Box sx={{ width: "100%" }}>
+                          <Stack direction="row" gap="10px" alignItems="center">
                             <RegularSwitch />
-                            <Label>Price differently against Amazon</Label>
+                            <Label>Use max price when out of stock</Label>
                           </Stack>
-                          <Stack direction="row" spacing="8px" alignItems="center">
-                            <Dropdown sx={{ flex: 1 }} data={dropdownsData} placeholder="Choose Option" />
-                            <Label>by</Label>
-                            <Dropdown
-                              sx={{ width: "55px" }}
-                              data={currenciesData}
-                              placeholder=""
-                              disableClearable
-                              setSelectedValue={setCurrency}
-                              value={currency}
-                            />
-                            <StyledTextField
-                              sx={{ width: "70px" }}
-                              InputProps={{
-                                startAdornment: <InputAdornment position="start">{currency}</InputAdornment>,
-                              }}
-                            />
-                          </Stack>
-                        </Stack>
-                      </Box>
-                    </RuleRow>
+                        </Box>
+                      </RuleRow>
+                    </CustomAccordion>
 
-                    <RuleRow>
-                      <Box sx={{ width: "100%" }}>
-                        <Stack spacing="10px">
-                          <Stack direction="row" spacing="8px" alignItems="center">
+                    <CustomAccordion summary="Exclude Sellers">
+                      <RuleRow>
+                        <Box sx={{ width: "100%" }}>
+                          <Stack direction="row" gap="10px" alignItems="center">
                             <RegularSwitch />
-                            <Label>Price differently against FBA</Label>
-                          </Stack>
-                          <Stack direction="row" spacing="8px" alignItems="center">
-                            <Dropdown sx={{ flex: 1 }} data={dropdownsData} placeholder="Choose Option" />
-                            <Label>by</Label>
-                            <Dropdown
-                              sx={{ width: "55px" }}
-                              data={currenciesData}
-                              placeholder=""
-                              disableClearable
-                              setSelectedValue={setCurrency}
-                              value={currency}
-                            />
                             <StyledTextField
-                              sx={{ width: "70px" }}
+                              sx={{ width: "65px" }}
                               InputProps={{
-                                startAdornment: <InputAdornment position="start">{currency}</InputAdornment>,
+                                endAdornment: (
+                                  <InputAdornment sx={{ "> p": { color: "#1565D8 !important" } }} position="end">
+                                    %
+                                  </InputAdornment>
+                                ),
                               }}
                             />
+                            <Label>Exclude sellers by their feedback rating</Label>
                           </Stack>
-                        </Stack>
-                      </Box>
-                    </RuleRow>
+                        </Box>
+                      </RuleRow>
 
-                    <RuleRow>
-                      <Box sx={{ width: "100%" }}>
-                        <Stack spacing="10px">
-                          <Stack direction="row" spacing="8px" alignItems="center">
+                      <RuleRow>
+                        <Box sx={{ width: "100%" }}>
+                          <Stack direction="row" gap="10px" alignItems="center">
                             <RegularSwitch />
-                            <Label>Price differently against FBM</Label>
+                            <Label>Exclude Amazon as a competitor</Label>
                           </Stack>
-                          <Stack direction="row" spacing="8px" alignItems="center">
-                            <Dropdown sx={{ flex: 1 }} data={dropdownsData} placeholder="Choose Option" />
-                            <Label>by</Label>
-                            <Dropdown
-                              sx={{ width: "55px" }}
-                              data={currenciesData}
-                              placeholder=""
-                              disableClearable
-                              setSelectedValue={setCurrency}
-                              value={currency}
-                            />
-                            <StyledTextField
-                              sx={{ width: "70px" }}
-                              InputProps={{
-                                startAdornment: <InputAdornment position="start">{currency}</InputAdornment>,
-                              }}
-                            />
+                        </Box>
+                      </RuleRow>
+
+                      <RuleRow>
+                        <Box sx={{ width: "100%" }}>
+                          <Stack direction="row" gap="10px" alignItems="center">
+                            <RegularSwitch />
+                            <Label>Exclude back-ordered sellers</Label>
                           </Stack>
-                        </Stack>
-                      </Box>
-                    </RuleRow>
-                  </div>
-                </CustomAccordion>
+                        </Box>
+                      </RuleRow>
 
-                <CustomAccordion summary="Competition Rules" disabled={activeStep < 4}>
-                  <RuleRow>
-                    <Box sx={{ width: "100%" }}>
-                      <Stack spacing="10px">
-                        <Label>When there is no competition</Label>
-                        <Dropdown sx={{ flex: 1 }} data={dropdownsData} placeholder="Choose Option" />
-                        <Stack direction="row" spacing="8px" alignItems="center">
-                          <Label>Set to</Label>
-                          <Dropdown
-                            sx={{ flex: 1, marginLeft: "10px !important" }}
-                            data={dropdownsData}
-                            placeholder="Choose Option"
-                          />
-                          <Label>by</Label>
-                          <Dropdown
-                            sx={{ width: "55px" }}
-                            data={currenciesData}
-                            placeholder=""
-                            disableClearable
-                            setSelectedValue={setCurrency}
-                            value={currency}
-                          />
-                          <StyledTextField
-                            sx={{ width: "70px" }}
-                            InputProps={{
-                              startAdornment: <InputAdornment position="start">{currency}</InputAdornment>,
-                            }}
-                          />
-                        </Stack>
-                      </Stack>
-                    </Box>
-                  </RuleRow>
+                      <RuleRow>
+                        <Box sx={{ width: "100%" }}>
+                          <Stack direction="row" gap="10px" alignItems="center">
+                            <RegularSwitch />
+                            <Label>Withe Free Shipping</Label>
+                          </Stack>
+                        </Box>
+                      </RuleRow>
+                    </CustomAccordion>
 
-                  <RuleRow>
-                    <Box sx={{ width: "100%" }}>
-                      <Stack spacing="10px">
-                        <Label>When the competition is Below your minimum price</Label>
-                        <Dropdown sx={{ flex: 1 }} data={dropdownsData} placeholder="Choose Option" />
-                        <Stack direction="row" spacing="8px" alignItems="center">
-                          <Label>Set to</Label>
-                          <Dropdown
-                            sx={{ flex: 1, marginLeft: "10px !important" }}
-                            data={dropdownsData}
-                            placeholder="Choose Option"
-                          />
-                          <Label>by</Label>
-                          <Dropdown
-                            sx={{ width: "55px" }}
-                            data={currenciesData}
-                            placeholder=""
-                            disableClearable
-                            setSelectedValue={setCurrency}
-                            value={currency}
-                          />
-                          <StyledTextField
-                            sx={{ width: "70px" }}
-                            InputProps={{
-                              startAdornment: <InputAdornment position="start">{currency}</InputAdornment>,
-                            }}
-                          />
-                        </Stack>
-                      </Stack>
-                    </Box>
-                  </RuleRow>
-
-                  <RuleRow>
-                    <Box sx={{ width: "100%" }}>
-                      <Stack spacing="10px">
-                        <Label>When the competition is Above your maximum price</Label>
-                        <Dropdown sx={{ flex: 1 }} data={dropdownsData} placeholder="Choose Option" />
-                        <Stack direction="row" spacing="8px" alignItems="center">
-                          <Label>Set to</Label>
-                          <Dropdown
-                            sx={{ flex: 1, marginLeft: "10px !important" }}
-                            data={dropdownsData}
-                            placeholder="Choose Option"
-                          />
-                          <Label>by</Label>
-                          <Dropdown
-                            sx={{ width: "55px" }}
-                            data={currenciesData}
-                            placeholder=""
-                            disableClearable
-                            setSelectedValue={setCurrency}
-                            value={currency}
-                          />
-                          <StyledTextField
-                            sx={{ width: "70px" }}
-                            InputProps={{
-                              startAdornment: <InputAdornment position="start">{currency}</InputAdornment>,
-                            }}
-                          />
-                        </Stack>
-                      </Stack>
-                    </Box>
-                  </RuleRow>
-
-                  <RuleRow>
-                    <Box sx={{ width: "100%" }}>
-                      <Stack direction="row" gap="10px" alignItems="center">
-                        <RegularSwitch />
-                        <Label>Use max price when out of stock</Label>
-                      </Stack>
-                    </Box>
-                  </RuleRow>
-                </CustomAccordion>
-
-                <CustomAccordion summary="Exclude Sellers" disabled={activeStep < 4}>
-                  <RuleRow>
-                    <Box sx={{ width: "100%" }}>
-                      <Stack direction="row" gap="10px" alignItems="center">
-                        <RegularSwitch />
-                        <StyledTextField
-                          sx={{ width: "65px" }}
-                          InputProps={{
-                            endAdornment: (
-                              <InputAdornment sx={{ "> p": { color: "#1565D8 !important" } }} position="end">
-                                %
-                              </InputAdornment>
-                            ),
-                          }}
+                    <CustomAccordion summary="Staying In the Buy Box">
+                      <RuleRow>
+                        <InfoBar
+                          disableGlow
+                          label="Maximize your profit in the Buy Box."
+                          description="Getting into the Buy Box, and staying there, can require two different strategies. In this stage, you'll determine the strategy and we will use to maximize your time in the Buy Box once you've won it."
                         />
-                        <Label>Exclude sellers by their feedback rating</Label>
-                      </Stack>
-                    </Box>
-                  </RuleRow>
+                      </RuleRow>
 
-                  <RuleRow>
-                    <Box sx={{ width: "100%" }}>
-                      <Stack direction="row" gap="10px" alignItems="center">
-                        <RegularSwitch />
-                        <Label>Exclude Amazon as a competitor</Label>
-                      </Stack>
-                    </Box>
-                  </RuleRow>
-
-                  <RuleRow>
-                    <Box sx={{ width: "100%" }}>
-                      <Stack direction="row" gap="10px" alignItems="center">
-                        <RegularSwitch />
-                        <Label>Exclude back-ordered sellers</Label>
-                      </Stack>
-                    </Box>
-                  </RuleRow>
-
-                  <RuleRow>
-                    <Box sx={{ width: "100%" }}>
-                      <Stack direction="row" gap="10px" alignItems="center">
-                        <RegularSwitch />
-                        <Label>Withe Free Shipping</Label>
-                      </Stack>
-                    </Box>
-                  </RuleRow>
-                </CustomAccordion>
-
-                <CustomAccordion summary="Staying In the Buy Box" disabled={activeStep < 4}>
-                  <RuleRow>
-                    <InfoBar
-                      disableGlow
-                      label="Maximize your profit in the Buy Box."
-                      description="Getting into the Buy Box, and staying there, can require two different strategies. In this stage, you'll determine the strategy and we will use to maximize your time in the Buy Box once you've won it."
-                    />
-                  </RuleRow>
-
-                  <RuleRow>
-                    <Box sx={{ width: "100%" }}>
-                      <Stack spacing="10px">
-                        <Label>When you've acquired the buy box</Label>
-                        <Stack direction="row" spacing="8px" alignItems="center">
-                          <Dropdown sx={{ flex: 1 }} data={dropdownsData} placeholder="Choose Option" />
-                          <Label>by</Label>
-                          <Dropdown
-                            sx={{ width: "55px" }}
-                            data={currenciesData}
-                            placeholder=""
-                            disableClearable
-                            setSelectedValue={setCurrency}
-                            value={currency}
-                          />
-                          <StyledTextField
-                            sx={{ width: "70px" }}
-                            InputProps={{
-                              startAdornment: <InputAdornment position="start">{currency}</InputAdornment>,
-                            }}
-                          />
-                        </Stack>
-                      </Stack>
-                    </Box>
-                  </RuleRow>
-                </CustomAccordion>
-              </Stack>
-            </Column>
-          </ContentRow>
+                      <RuleRow>
+                        <Box sx={{ width: "100%" }}>
+                          <Stack spacing="10px">
+                            <Label>When you've acquired the buy box</Label>
+                            <Stack direction="row" spacing="8px" alignItems="center">
+                              <Dropdown sx={{ flex: 1 }} data={dropdownsData} placeholder="Choose Option" />
+                              <Label>by</Label>
+                              <Dropdown
+                                sx={{ width: "55px" }}
+                                data={currenciesData}
+                                placeholder=""
+                                disableClearable
+                                setSelectedValue={setCurrency}
+                                value={currency}
+                              />
+                              <StyledTextField
+                                sx={{ width: "70px" }}
+                                InputProps={{
+                                  startAdornment: <InputAdornment position="start">{currency}</InputAdornment>,
+                                }}
+                              />
+                            </Stack>
+                          </Stack>
+                        </Box>
+                      </RuleRow>
+                    </CustomAccordion>
+                  </Stack>
+                </ParentAccordion>
+              </Strategies>
+            </Container>
+          </Column>
         </FastStrategyContent>
 
-        <AlertBar open={isAlertOpen} onClose={handleAlertClose} />
+        {strategyType === "my" && activeStrategy !== selectedStrategy ? (
+          <AnimatePresence mode="wait">
+            <motion.div
+              initial={{ x: 40, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: -40, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              <MyStrategyInfo numberOfSkus={numberOfSkus} />
+            </motion.div>
+          </AnimatePresence>
+        ) : null}
+
+        <Stack direction="row" gap="16px" marginTop="40px">
+          <StyledButtonWhite variant="outlined" onClick={() => handleSaveClick()}>
+            Save as new Strategy
+          </StyledButtonWhite>
+          <StyledButtonBlue variant="contained">Assign to SKU</StyledButtonBlue>
+        </Stack>
 
         <ApplyStrategyModal
           position="top-right"
@@ -762,31 +760,13 @@ const FastStrategy = ({ open, onClose }) => {
           onClose={handleApplyStrategyModalClose}
         />
 
-        <SaveStrategyModal position="top-right" open={isSaveStrategyModalOpen} onClose={handleSaveStrategyModalClose} />
-
-        <FastStrategyNavigation>
-          <Stack direction="row" gap="16px" width="100%" mt="10px" justifyContent="end" padding="20px">
-            <StyledButton
-              variant="text"
-              startIcon={<ArrowBackRoundedIcon />}
-              onClick={() => {
-                onClose();
-                handleReset();
-              }}
-            >
-              Close
-            </StyledButton>
-            <StyledButton
-              variant="contained"
-              endIcon={<ArrowForwardRoundedIcon />}
-              onClick={handleAssign}
-              disabled={selectedStrategy === activeStrategy}
-            >
-              Assign and Proceed
-            </StyledButton>
-          </Stack>
-        </FastStrategyNavigation>
-      </div>
+        <SaveStrategyModal
+          position="top-right"
+          mode={flow}
+          open={isSaveStrategyModalOpen}
+          onClose={handleSaveStrategyModalClose}
+        />
+      </MainContainer>
     </TemporaryDrawer>
   );
 };

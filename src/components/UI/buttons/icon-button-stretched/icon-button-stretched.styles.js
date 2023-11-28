@@ -9,9 +9,9 @@ export const RippleContainer = styled.div`
     border-radius: 100%;
     position: absolute;
     opacity: 0.75;
-    background-color: ${({color}) => color};
+    background-color: ${({ color }) => color};
     animation-name: ripple;
-    animation-duration: ${({$duration}) => $duration}ms;
+    animation-duration: ${({ $duration }) => $duration}ms;
   }
 
   @keyframes ripple {
@@ -26,7 +26,7 @@ export const ButtonImage = styled.img`
   width: 100%;
   height: auto;
   aspect-ratio: attr(width) / attr(height);
-  transition: ${({$noAnimations}) => $noAnimations ? "none" : "transform 1s ease-in-out"};
+  transition: ${({ $noAnimations }) => ($noAnimations ? "none" : "transform 1s ease-in-out")};
 `;
 
 export const BaseButton = styled.button`
@@ -62,10 +62,22 @@ export const WhiteOutlinedButton = styled(BaseButton)`
   background-color: #fff;
 `;
 
+export const WhiteRoundedOutlinedButton = styled(WhiteOutlinedButton)`
+  border-radius: 16px;
+  width: 100%;
+`;
+
+export const TransparentBlueButton = styled(BaseButton)`
+  color: #1565d8;
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+`;
+
 export const ButtonText = styled.h3`
   font-size: 0.8125rem;
   font-style: normal;
-  font-weight: 400;
+  font-weight: ${({ bold }) => (bold ? 600 : 400)};
   line-height: 1rem;
   letter-spacing: 0.01625rem;
   margin: 0;

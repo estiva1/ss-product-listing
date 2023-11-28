@@ -7,7 +7,9 @@ import {
   ButtonImage,
   ButtonText,
   RippleContainer,
+  TransparentBlueButton,
   WhiteOutlinedButton,
+  WhiteRoundedOutlinedButton,
 } from "./icon-button-stretched.styles";
 
 const useDebouncedRippleCleanUp = (rippleCount, duration, cleanUpFunction) => {
@@ -73,6 +75,8 @@ export const BUTTON_TYPE_CLASSES = {
   blueFilled: "blueFilled",
   //   whiteFilled: "whiteFilled",
   whiteOutlined: "whiteOutlined",
+  whiteRoundedOutlined: "whiteRoundedOutlined",
+  transparentBlue: "transparentBlue",
 };
 const getButton = (buttonType = BUTTON_TYPE_CLASSES.blue) =>
   ({
@@ -80,15 +84,25 @@ const getButton = (buttonType = BUTTON_TYPE_CLASSES.blue) =>
     [BUTTON_TYPE_CLASSES.blueFilled]: BlueFilledButton,
     // [BUTTON_TYPE_CLASSES.whiteFilled]: WhiteFilledButton,
     [BUTTON_TYPE_CLASSES.whiteOutlined]: WhiteOutlinedButton,
+    [BUTTON_TYPE_CLASSES.whiteRoundedOutlined]: WhiteRoundedOutlinedButton,
+    [BUTTON_TYPE_CLASSES.transparentBlue]: TransparentBlueButton,
   }[buttonType]);
 
-const IconButtonStretched = ({ buttonType, buttonText = "", buttonImage = null, noAnimations, children, ...props }) => {
+const IconButtonStretched = ({
+  buttonType,
+  buttonText = "",
+  buttonImage = null,
+  noAnimations,
+  bold,
+  children,
+  ...props
+}) => {
   const CustomIconButtonStretched = getButton(buttonType);
 
   return (
     <CustomIconButtonStretched {...props}>
-      <Stack direction="row" gap="8px" alignItems="center" justifyContent="space-between">
-        <ButtonText>{buttonText}</ButtonText>
+      <Stack direction="row" gap="8px" alignItems="center" justifyContent="center">
+        <ButtonText bold={bold}>{buttonText}</ButtonText>
         <ButtonImage src={buttonImage} style={{ width: "16px", height: "16px" }} $noAnimations={noAnimations} />
       </Stack>
       {children}

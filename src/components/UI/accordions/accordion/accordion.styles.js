@@ -25,10 +25,10 @@ export const StyledAccordion = styled(Accordion)`
     flex-grow: unset;
     color: #000;
     font-family: Titillium Web;
-    font-size: 1.125rem;
+    font-size: 1.125rem !important;
     font-style: normal;
     font-weight: 700;
-    line-height: 1.25rem;
+    line-height: 1.25rem !important;
     margin: 0;
     transition: all 0.3s ease;
 
@@ -60,4 +60,12 @@ export const StyledAccordion = styled(Accordion)`
   .MuiAccordionDetails-root {
     padding: 0;
   }
+`;
+
+export const Circle = styled.span`
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  border-radius: 50%;
+  background-color: ${(props) => (props.expanded ? "#1565D8" : "#99DAFF")};
 `;

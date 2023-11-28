@@ -16,7 +16,7 @@ import {
   StyledButton,
 } from "./save-strategy-modal.styles";
 
-const SaveStrategyModal = ({ position, open, onClose }) => {
+const SaveStrategyModal = ({ position, mode, open, onClose }) => {
   const [isStrategySaved, setIsStrategySaved] = useState(false);
 
   const handleSaveStrategy = () => {
@@ -27,7 +27,9 @@ const SaveStrategyModal = ({ position, open, onClose }) => {
       <SaveStrategyModalContainer>
         {!isStrategySaved ? (
           <Stack spacing="32px" alignItems="center">
-            <PrimaryText>Let's name your Strategy and save it to your templates!</PrimaryText>
+            <PrimaryText>
+              Let's name your {mode === "edit" ? "customized" : "New"} Strategy and save it to your templates!
+            </PrimaryText>
             <StyledTextField sx={{ mb: "8px" }} placeholder="Strategy name" fullWidth />
             <Stack direction="row" gap="20px" width="100%" justifyContent="end">
               <StyledButton variant="text" onClick={onClose}>
