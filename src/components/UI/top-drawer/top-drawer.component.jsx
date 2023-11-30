@@ -10,7 +10,7 @@ const TemporaryDrawer = ({ open, onClose, hideBottomBorder, children }) => {
       PaperProps={{
         scroll: "body",
       }}
-      hideBottomBorder={hideBottomBorder}
+      $hideBottomBorder={hideBottomBorder}
     >
       {children}
     </StyledDrawer>

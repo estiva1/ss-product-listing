@@ -116,7 +116,7 @@ const ExpandableStrategyItem = ({
           <Stack direction="row" alignItems="baseline" gap="10px">
             <Stack maxWidth="172px" direction="row" alignItems="center" gap="6px">
               <AiIcon style={{ display: aiStrategy ? "block" : "none" }} />
-              <Label clamp={clamp} currentStrategy={currentStrategy} aiStrategy={aiStrategy}>
+              <Label $clamp={clamp} $currentStrategy={currentStrategy} $aiStrategy={aiStrategy}>
                 {label}
               </Label>
             </Stack>
@@ -150,7 +150,7 @@ const ExpandableStrategyItem = ({
             </IconButtonStretched>
           )}
 
-          <HintCircleContainer hintExpanded={hintExpanded} onClick={toggleHint}>
+          <HintCircleContainer $hintExpanded={hintExpanded} onClick={toggleHint}>
             <LightBulbIcon />
           </HintCircleContainer>
         </Stack>

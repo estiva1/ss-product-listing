@@ -5,7 +5,7 @@ export const GlowingBox = styled.div`
   flex-direction: column;
   border-radius: 8px;
   background: #fff;
-  box-shadow: ${(props) => (props.disableGlow ? "1px 1px 2px 1px" : "4px 4px 25px 0px")} rgba(111, 213, 246, 0.25);
+  box-shadow: ${(props) => (props.$disableGlow ? "1px 1px 2px 1px" : "4px 4px 25px 0px")} rgba(111, 213, 246, 0.25);
   overflow: hidden;
 `;
 

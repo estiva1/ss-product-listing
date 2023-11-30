@@ -57,7 +57,7 @@ export const HintText = styled.span`
 `;
 
 const applyClampStyles = (props) => {
-  if (props.clamp) {
+  if (props.$clamp) {
     return css`
       text-overflow: ellipsis;
       overflow: hidden;
@@ -69,7 +69,7 @@ const applyClampStyles = (props) => {
 };
 
 const applyGradientForLabel = (props) => {
-  if (props.aiStrategy) {
+  if (props.$aiStrategy) {
     return css`
       background-image: linear-gradient(135deg, #1565d8 0%, #090c53 100%);
       -webkit-background-clip: text;
@@ -116,7 +116,7 @@ export const StyledFormControlLabel = styled(FormControlLabel)`
 
 export const Label = styled.h3`
   ${applyClampStyles};
-  color: ${({ currentStrategy }) => (currentStrategy ? "#1565D8" : "#000")};
+  color: ${({ $currentStrategy }) => ($currentStrategy ? "#1565D8" : "#000")};
   ${applyGradientForLabel};
   font-size: 1.125rem;
   font-style: normal;
@@ -146,13 +146,13 @@ export const HintCircleContainer = styled.div`
   display: flex;
   min-width: 32px;
   width: 32px;
-  height: ${({ hintExpanded }) => (hintExpanded ? "36px" : "32px")};
+  height: ${({ $hintExpanded }) => ($hintExpanded ? "36px" : "32px")};
   padding-top: 8px;
   //align-items: center;
   justify-content: center;
   border-radius: 50%;
-  ${({ hintExpanded }) =>
-    hintExpanded &&
+  ${({ $hintExpanded }) =>
+    $hintExpanded &&
     `
     border-bottom-left-radius: 0px;
     border-bottom-right-radius: 0px;
@@ -165,7 +165,7 @@ export const HintCircleContainer = styled.div`
 
   &:hover {
     transition: all 0.2s ease-out;
-    transition-delay: ${({ hintExpanded }) => (hintExpanded ? "0s" : "0.25s")};
+    transition-delay: ${({ $hintExpanded }) => ($hintExpanded ? "0s" : "0.25s")};
 
     & > span {
       animation: shake 0.6s ease-in-out;

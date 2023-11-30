@@ -6,7 +6,7 @@ import { Description, DescriptionContainer, GlowingBox, Label, LabelContainer } 
 
 const InfoBar = ({ label = "", description = "", disableGlow }) => {
   return (
-    <GlowingBox disableGlow={disableGlow}>
+    <GlowingBox $disableGlow={disableGlow}>
       <LabelContainer>
         <Stack direction="row" spacing="8px" alignItems="center">
           <LightBulb />

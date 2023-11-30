@@ -102,7 +102,7 @@ const IconButtonStretched = ({
   return (
     <CustomIconButtonStretched {...props}>
       <Stack direction="row" gap="8px" alignItems="center" justifyContent="center">
-        <ButtonText bold={bold}>{buttonText}</ButtonText>
+        <ButtonText $bold={bold}>{buttonText}</ButtonText>
         <ButtonImage src={buttonImage} style={{ width: "16px", height: "16px" }} $noAnimations={noAnimations} />
       </Stack>
       {children}

@@ -77,7 +77,7 @@ export const TransparentBlueButton = styled(BaseButton)`
 export const ButtonText = styled.h3`
   font-size: 0.8125rem;
   font-style: normal;
-  font-weight: ${({ bold }) => (bold ? 600 : 400)};
+  font-weight: ${({ $bold }) => ($bold ? 600 : 400)};
   line-height: 1rem;
   letter-spacing: 0.01625rem;
   margin: 0;

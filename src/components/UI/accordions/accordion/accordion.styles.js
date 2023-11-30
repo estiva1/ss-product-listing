@@ -67,5 +67,5 @@ export const Circle = styled.span`
   height: 16px;
   margin-top: 2px;
   border-radius: 50%;
-  background-color: ${(props) => (props.expanded ? "#1565D8" : "#99DAFF")};
+  background-color: #99daff;
 `;
