@@ -28,6 +28,7 @@ export const ChipLabel = styled.h4`
   font-style: normal;
   font-weight: 400;
   line-height: 1rem;
+  margin: 0;
 `;
 
 export const ChipValue = styled(ChipLabel)`

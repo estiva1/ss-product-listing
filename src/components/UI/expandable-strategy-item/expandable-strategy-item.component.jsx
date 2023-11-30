@@ -105,6 +105,7 @@ const ExpandableStrategyItem = ({
           onClick={toggleAcordion}
         >
           <Radio
+            name="styled-radio-button"
             sx={{ p: 0 }}
             disableRipple
             color="default"

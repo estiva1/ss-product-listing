@@ -217,6 +217,7 @@ const EnhancedTableHead = (props) => {
       <TableRow>
         <StyledTableCell padding="checkbox">
           <Checkbox
+            name="head-checkbox"
             color="primary"
             size="small"
             indeterminate={numSelected > 0 && numSelected < rowCount}
@@ -474,6 +475,7 @@ const RepricerProductsTable = ({ data, itemFilter, onChangeStrategyButtonClick }
                 >
                   <StyledTableCell padding="checkbox">
                     <Checkbox
+                      name="row-checkbox"
                       onClick={(event) => handleClick(event, row.id)}
                       color="primary"
                       size="small"

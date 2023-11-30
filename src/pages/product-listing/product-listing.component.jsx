@@ -22,11 +22,10 @@ import { ReactComponent as ButtonIconTwo } from "../../assets/button-icon-2.svg"
 import CreateNewStrategy from "../../components/create-new-strategy/create-new-strategy.component";
 import FastStrategy from "../../components/fast-strategy/fast-strategy.component";
 
-const MotionWrapper = ({ key, children }) => {
+const MotionWrapper = ({ children }) => {
   return (
     <AnimatePresence mode="wait">
       <motion.div
-        key={key}
         initial={{ y: 10, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: -10, opacity: 0 }}
@@ -311,7 +310,11 @@ const ProductListing = () => {
         </Stack>
       </StyledPopover>
 
-      <RepricerProductsTable data={repricerProductsTableData} itemFilter={deferredItemFilter} onChangeStrategyButtonClick={handleFastStrategyAdjustmentOpen}/>
+      <RepricerProductsTable
+        data={repricerProductsTableData}
+        itemFilter={deferredItemFilter}
+        onChangeStrategyButtonClick={handleFastStrategyAdjustmentOpen}
+      />
       <PriceSection open={isPriceSectionOpen} onClose={handlePriceSectionClose} />
       <ProfitOverlay open={isProfitOverlayOpen} onClose={handleProfitOverlayClose} />
       <CreateNewStrategy open={isCreateNewStrategyOpen} onClose={handleCreateNewStrategyClose} />

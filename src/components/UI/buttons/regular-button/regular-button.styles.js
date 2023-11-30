@@ -28,10 +28,10 @@ export const RippleContainer = styled.div`
 export const BlueButton = styled.button`
   position: relative;
   overflow: hidden;
-  min-width: ${(props) => props.width};;
-  width: ${(props) => props.width};
-  height: ${(props) => props.height};
-  padding: ${(props) => props.padding};
+  min-width: ${(props) => props.$width};;
+  width: ${(props) => props.$width};
+  height: ${(props) => props.$height};
+  padding: ${(props) => props.$padding};
   border: 1px solid #1565d8;
   border-radius: 4px;
   color: #fff;

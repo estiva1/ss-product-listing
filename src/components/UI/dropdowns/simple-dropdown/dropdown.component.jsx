@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useId, useState } from "react";
 import TextField from "@mui/material/TextField";
 import { ListItem, PrimaryText, StyledAutocomplete } from "./dropdown.styles";
 
@@ -13,7 +13,7 @@ const Dropdown = ({ data = {}, placeholder = "Select", setSelectedValue, ...prop
 
   return (
     <StyledAutocomplete
-      id="controllable-states-demo"
+      id={useId()}
       size="small"
       value={value}
       options={data}

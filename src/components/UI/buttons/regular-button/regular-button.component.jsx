@@ -81,7 +81,7 @@ const getButton = (buttonType = BUTTON_TYPE_CLASSES.blue) =>
 
 const Button = ({ buttonType, width = "auto", height = "auto", padding = "0px", ...props }) => {
   const CustomButton = getButton(buttonType);
-  return <CustomButton width={width} height={height} padding={padding} {...props}></CustomButton>;
+  return <CustomButton $width={width} $height={height} $padding={padding} {...props}></CustomButton>;
 };
 
 export default Button;

@@ -6,7 +6,10 @@ import { ChipLabel, ChipValue, StyledChip } from "./deletable-chip.styles";
 const ChipText = ({ value = "N/A", filterType = "N/A" }) => {
   return (
     <ChipLabel>
-      {filterType}:&nbsp;<ChipValue>{value}</ChipValue>
+      {filterType}:&nbsp;
+      <span>
+        <ChipValue>{value}</ChipValue>
+      </span>
     </ChipLabel>
   );
 };

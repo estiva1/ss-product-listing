@@ -23,7 +23,7 @@ const BigSwitch = ({ switchText, isOn, handleToggle }) => {
 
   return (
     <SwitchContainer style={{ width: `${textWidth}px` }}>
-      <StyledInput type="checkbox" checked={isOn} onChange={handleToggle}/>
+      <StyledInput name="input-for-switch" type="checkbox" checked={isOn} onChange={handleToggle}/>
       <StyledSlider $isOn={isOn}>
         <StyledSliderButton $isOn={isOn} style={{ transform: `translateX(${isOn ? `${translateX}px` : 0})` }} />
       </StyledSlider>
