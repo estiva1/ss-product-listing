@@ -30,7 +30,6 @@ const BpIcon = styled("span")(() => ({
   borderRadius: "50%",
   width: 32,
   height: 32,
-  boxShadow: "none",
   boxShadow: "0px 0px 0px 2px inset #1565D8",
   backgroundColor: "#fff",
   transition: "all 0.5s ease-in-out",

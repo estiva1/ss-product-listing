@@ -24,16 +24,14 @@ import FastStrategy from "../../components/fast-strategy/fast-strategy.component
 
 const MotionWrapper = ({ children }) => {
   return (
-    <AnimatePresence mode="wait">
-      <motion.div
-        initial={{ y: 10, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        exit={{ y: -10, opacity: 0 }}
-        transition={{ duration: 0.2 }}
-      >
-        {children}
-      </motion.div>
-    </AnimatePresence>
+    <motion.div
+      initial={{ x: -20, opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+      exit={{ x: -20, opacity: 0 }}
+      transition={{ duration: 0.2 }}
+    >
+      {children}
+    </motion.div>
   );
 };
 
@@ -126,8 +124,8 @@ const ProductListing = () => {
     setCostPrice(null);
   };
 
-  const open = Boolean(anchorEl);
-  const id = open ? "popover-with-filters" : undefined;
+  const filtersMenuOpen = Boolean(anchorEl);
+  const id = filtersMenuOpen ? "popover-with-filters" : undefined;
 
   const chooseListingData = [
     "Active Listing",
@@ -148,71 +146,42 @@ const ProductListing = () => {
   const fulfilmentByData = ["FBA", "FBM"];
   const costPriceData = ["Missing", "Present"];
 
-  function isDropdownNotEmpty(dropdown) {
-    return dropdown !== null && dropdown !== undefined;
-  }
-
-  const isListingEmpty = listing === null;
-  const isAddFilterBy = addFilterBy === null;
-  const isSelectStrategy = selectStrategy === null;
-  const isFulfilmentBy = fulfilmentBy === null;
-  const isCostPrice = costPrice === null;
-
-  const chips = [
-    isListingEmpty ? null : (
-      <MotionWrapper key={0}>
-        <DeletableChip
-          filterType="Listing"
-          value={listing}
-          onDelete={handleListingClear}
-          clearInput={handleListingClear}
-        />
-      </MotionWrapper>
-    ),
-    isAddFilterBy ? null : (
-      <MotionWrapper key={1}>
-        <DeletableChip
-          filterType="Filtered by"
-          value={addFilterBy}
-          onDelete={handleAddFilterByClear}
-          clearInput={handleAddFilterByClear}
-        />
-      </MotionWrapper>
-    ),
-    isSelectStrategy ? null : (
-      <MotionWrapper key={2}>
-        <DeletableChip
-          filterType="Selected Strategy"
-          value={selectStrategy}
-          onDelete={handleSelectStrategyClear}
-          clearInput={handleSelectStrategyClear}
-        />
-      </MotionWrapper>
-    ),
-    isFulfilmentBy ? null : (
-      <MotionWrapper key={3}>
-        <DeletableChip
-          filterType="Fulfilment by"
-          value={fulfilmentBy}
-          onDelete={handleFulfilmentByClear}
-          clearInput={handleFulfilmentByClear}
-        />
-      </MotionWrapper>
-    ),
-    isCostPrice ? null : (
-      <MotionWrapper key={4}>
-        <DeletableChip
-          filterType="Cost Price"
-          value={costPrice}
-          onDelete={handleCostPriceClear}
-          clearInput={handleCostPriceClear}
-        />
-      </MotionWrapper>
-    ),
+  const dropdownsData = [
+    { data: chooseListingData, value: listing, placeholder: "Choose Listing", setSelectedValue: setListing },
+    { data: addFilterByData, value: addFilterBy, placeholder: "Add Filter by", setSelectedValue: setAddFilterBy },
+    {
+      data: selectStrategyData,
+      value: selectStrategy,
+      placeholder: "Select Strategy",
+      setSelectedValue: setSelectStrategy,
+    },
+    { data: fulfilmentByData, value: fulfilmentBy, placeholder: "Fulfilment by", setSelectedValue: setFulfilmentBy },
+    { data: costPriceData, value: costPrice, placeholder: "Cost Price", setSelectedValue: setCostPrice },
   ];
 
-  const nonEmptyDropdowns = chips.filter(isDropdownNotEmpty);
-  const numberOfNonEmptyDropdowns = nonEmptyDropdowns.length;
+  const isDropdownNotEmpty = (dropdown) => {
+    return dropdown !== null && dropdown !== undefined;
+  };
+
+  const createChip = (key, filterType, value, onDelete, clearInput) => (
+    <MotionWrapper key={key}>
+      <DeletableChip filterType={filterType} value={value} onDelete={onDelete} clearInput={clearInput} />
+    </MotionWrapper>
+  );
+
+  const chips = [
+    listing ? createChip(0, "Listing", listing, handleListingClear, handleListingClear) : null,
+    addFilterBy ? createChip(1, "Filtered by", addFilterBy, handleAddFilterByClear, handleAddFilterByClear) : null,
+    selectStrategy
+      ? createChip(2, "Selected Strategy", selectStrategy, handleSelectStrategyClear, handleSelectStrategyClear)
+      : null,
+    fulfilmentBy
+      ? createChip(3, "Fulfilment by", fulfilmentBy, handleFulfilmentByClear, handleFulfilmentByClear)
+      : null,
+    costPrice ? createChip(4, "Cost Price", costPrice, handleCostPriceClear, handleCostPriceClear) : null,
+  ];
+
+  const numberOfNonEmptyDropdowns = chips.filter(isDropdownNotEmpty).length;
 
   return (
     <Container>
@@ -245,7 +214,6 @@ const ProductListing = () => {
         <Badge badgeContent={numberOfNonEmptyDropdowns} color="primary">
           <IconButtonStretched
             type="button"
-            //aria-describedby={id}
             buttonType={BUTTON_TYPE_CLASSES.whiteOutlined}
             buttonText="Filters"
             buttonImage={filterIcon}
@@ -257,12 +225,14 @@ const ProductListing = () => {
           </IconButtonStretched>
         </Badge>
 
-        <DraggableContainer>{nonEmptyDropdowns}</DraggableContainer>
+        <DraggableContainer>
+          <AnimatePresence mode="popLayot">{chips.map((chip) => chip)}</AnimatePresence>
+        </DraggableContainer>
       </Stack>
 
       <StyledPopover
         id={id}
-        open={open}
+        open={filtersMenuOpen}
         anchorEl={anchorEl}
         onClose={handleCloseFiltersMenu}
         anchorOrigin={{
@@ -272,31 +242,9 @@ const ProductListing = () => {
         style={{ marginTop: "10px" }}
       >
         <Stack direction="column" gap="16px" width="200px">
-          <Dropdown
-            data={chooseListingData}
-            value={listing}
-            placeholder="Choose Listing"
-            setSelectedValue={setListing}
-          />
-          <Dropdown
-            data={addFilterByData}
-            value={addFilterBy}
-            placeholder="Add Filter by"
-            setSelectedValue={setAddFilterBy}
-          />
-          <Dropdown
-            data={selectStrategyData}
-            value={selectStrategy}
-            placeholder="Select Strategy"
-            setSelectedValue={setSelectStrategy}
-          />
-          <Dropdown
-            data={fulfilmentByData}
-            value={fulfilmentBy}
-            placeholder="Fulfilment by"
-            setSelectedValue={setFulfilmentBy}
-          />
-          <Dropdown data={costPriceData} value={costPrice} placeholder="Cost Price" setSelectedValue={setCostPrice} />
+          {dropdownsData.map((dropdown, index) => (
+            <Dropdown key={index} {...dropdown} />
+          ))}
           <IconButtonStretched
             type="button"
             buttonType={BUTTON_TYPE_CLASSES.blueFilled}
