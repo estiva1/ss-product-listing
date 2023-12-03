@@ -54,7 +54,7 @@ const SaveStrategyModal = ({ position, mode, open, onClose }) => {
                 </AnimatedCheck>
               </CompletedIconContainer>
             </IconWaves>
-            <PrimaryText>{`Congratulations!\nYou have successfully Created a Strategy`}</PrimaryText>
+            <PrimaryText>{`Congratulations!\nYou have successfully ${mode === "edit" ? "customized\na Strategy" : "\ncreated a New Strategy"}`}</PrimaryText>
           </Stack>
         )}
       </SaveStrategyModalContainer>
